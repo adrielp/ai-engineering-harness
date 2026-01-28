@@ -67,6 +67,7 @@ Ticket → /create_plan → /implement_plan → /validate_plan → /commit
 | `create_plan` | `/create_plan` | Generate implementation plan from ticket |
 | `implement_plan` | `/implement_plan` | Execute approved plan |
 | `validate_plan` | `/validate_plan` | Verify implementation |
+| `research_codebase` | `/research_codebase` | Comprehensive codebase research |
 | `commit` | `/commit` | Create structured git commit |
 | `debug` | `/debug` | Investigate issues |
 | `debug-k8s` | `/debug-k8s` | Debug Kubernetes clusters (prefers K8s MCP) |

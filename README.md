@@ -95,6 +95,8 @@ Custom slash commands for workflows:
 - `/research_codebase` - Conduct comprehensive codebase research
 - `/commit` - Create well-structured git commits
 - `/debug` - Investigate issues during manual testing
+- `/debug-k8s` - Debug Kubernetes clusters (prefers K8s MCP when available)
+- `/init_harness` - Initialize harness in a repository (also available as skill)
 
 #### Skills
 Auto-triggered behaviors based on context:
@@ -122,6 +124,7 @@ Skills that extend Claude's capabilities (commands + auto-triggered skills):
 **Manual Skills** (invoke with `/skill-name`):
 - `/commit` - Create well-structured git commits
 - `/debug` - Investigate issues during manual testing
+- `/debug-k8s` - Debug Kubernetes clusters (prefers K8s MCP when available)
 - `/create_plan` - Create detailed implementation plans from tickets
 - `/implement_plan` - Execute approved plans phase by phase
 - `/validate_plan` - Verify implementation against plan specifications
@@ -132,6 +135,23 @@ Skills that extend Claude's capabilities (commands + auto-triggered skills):
 - `git-commit-helper` - Triggers when you say "commit" or similar
 - `pr-description-generator` - Triggers when creating pull requests
 - `experimental-pr-workflow` - Formalizes experimental work
+
+### Command Reference
+
+Quick reference of all commands/skills across tools:
+
+| Command | OpenCode | Claude Code | Purpose |
+|---------|:--------:|:-----------:|---------|
+| `/init_harness` | ✓ | ✓ | Initialize harness in repository |
+| `/create_plan` | ✓ | ✓ | Create implementation plan from ticket |
+| `/implement_plan` | ✓ | ✓ | Execute approved plan |
+| `/validate_plan` | ✓ | ✓ | Verify implementation |
+| `/commit` | ✓ | ✓ | Create well-structured commits |
+| `/debug` | ✓ | ✓ | Investigate issues |
+| `/debug-k8s` | ✓ | ✓ | Debug Kubernetes clusters |
+| `/research_codebase` | ✓ | ✓ | Comprehensive codebase research |
+
+**Note**: OpenCode uses `/init-harness` (kebab-case) while Claude Code uses `/init_harness` (snake_case) due to tool conventions.
 
 ### Thoughts Directory Structure
 
