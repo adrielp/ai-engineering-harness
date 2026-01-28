@@ -6,7 +6,10 @@ A harness for AI coding agents that provides context engineering patterns, comma
 
 - **OpenCode** (opencode.ai) - Supported ✓
 - **Claude Code** (code.claude.com) - Supported ✓
-- **Cursor** - Planned ([HARNESS-002](thoughts/shared/tickets/HARNESS-002-add-cursor-support.md))
+- **Cursor** - Not planned yet
+- **Windsurf** - Not planned yet
+- **GitHub Copilot CLI** - Not planned yet
+- **Gemini CLI** - Not planned yet
 
 ## Quick Start
 
