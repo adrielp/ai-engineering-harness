@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "kubernetes": {
+      "command": "npx",
+      "args": ["-y", "kubernetes-mcp-server@latest"],
+      "disabled": true
+    }
+  }
+}

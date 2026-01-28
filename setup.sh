@@ -11,7 +11,12 @@
 # - Supports multiple "packages" that can be stowed independently
 #
 # Usage:
-#   ./setup.sh [options]
+#   ./setup.sh <tool> [options]
+#
+# Tools:
+#   opencode    Install OpenCode configuration
+#   claude      Install Claude Code configuration
+#   all         Install all configurations
 #
 # Options:
 #   --dry-run, -n    Show what would be done without making changes
@@ -31,20 +36,42 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Package definitions (bash 3.x compatible)
-# Format: "package_name|target_directory"
-PACKAGES="opencode|$HOME/.config/opencode"
+# Function to get target directory for a tool
+get_target_dir() {
+    case "$1" in
+        opencode)
+            echo "$HOME/.config/opencode"
+            ;;
+        claude)
+            echo "$HOME/.claude"
+            ;;
+        *)
+            echo ""
+            ;;
+    esac
+}
 
 print_usage() {
     cat << 'EOF'
 Usage:
-  ./setup.sh [options]
+  ./setup.sh <tool> [options]
+
+Tools:
+  opencode    Install OpenCode configuration
+  claude      Install Claude Code configuration
+  all         Install all configurations
 
 Options:
   --dry-run, -n    Show what would be done without making changes
   --restow, -R     Restow (update) existing symlinks
   --delete, -D     Remove symlinks (unstow)
   --help, -h       Show this help message
+
+Examples:
+  ./setup.sh opencode              # Install OpenCode
+  ./setup.sh claude --dry-run      # Preview Claude Code installation
+  ./setup.sh all --restow          # Update all configurations
+  ./setup.sh opencode --delete     # Remove OpenCode symlinks
 EOF
 }
 
@@ -156,10 +183,42 @@ unstow_package() {
     fi
 }
 
+process_tool() {
+    local tool="$1"
+    local action="$2"
+    local restow="$3"
+    local dry_run="$4"
+    
+    local target_dir=$(get_target_dir "$tool")
+    
+    if [[ -z "$target_dir" ]]; then
+        log_error "Unknown tool: $tool"
+        return 1
+    fi
+    
+    case "$action" in
+        stow)
+            if [[ "$restow" == "true" ]]; then
+                stow_package "$tool" "$target_dir" "--restow $dry_run"
+            else
+                if check_conflicts "$tool" "$target_dir"; then
+                    stow_package "$tool" "$target_dir" "$dry_run"
+                else
+                    log_error "Please resolve conflicts before stowing '$tool'"
+                fi
+            fi
+            ;;
+        unstow)
+            unstow_package "$tool" "$target_dir" "$dry_run"
+            ;;
+    esac
+}
+
 main() {
     local dry_run=""
     local action="stow"
     local restow=false
+    local tool=""
     
     # Parse arguments
     while [[ $# -gt 0 ]]; do
@@ -180,6 +239,10 @@ main() {
                 print_usage
                 exit 0
                 ;;
+            opencode|claude|all)
+                tool="$1"
+                shift
+                ;;
             *)
                 log_error "Unknown option: $1"
                 print_usage
@@ -187,6 +250,14 @@ main() {
                 ;;
         esac
     done
+    
+    # Check if tool was specified
+    if [[ -z "$tool" ]]; then
+        log_error "No tool specified"
+        echo ""
+        print_usage
+        exit 1
+    fi
     
     echo ""
     echo "=========================================="
@@ -198,51 +269,49 @@ main() {
     echo ""
     
     log_info "Stow directory: $STOW_DIR"
-    log_info "Available packages:"
-    
-    # Parse and display packages
-    echo "$PACKAGES" | tr ' ' '\n' | while IFS='|' read -r pkg target; do
-        echo "  - $pkg -> $target"
-    done
-    echo ""
     
     if [[ -n "$dry_run" ]]; then
         log_warn "DRY RUN MODE - No changes will be made"
         echo ""
     fi
     
-    # Process each package
-    echo "$PACKAGES" | tr ' ' '\n' | while IFS='|' read -r package target_dir; do
-        case "$action" in
-            stow)
-                if [[ "$restow" == "true" ]]; then
-                    stow_package "$package" "$target_dir" "--restow $dry_run"
-                else
-                    if check_conflicts "$package" "$target_dir"; then
-                        stow_package "$package" "$target_dir" "$dry_run"
-                    else
-                        log_error "Please resolve conflicts before stowing '$package'"
-                    fi
-                fi
-                ;;
-            unstow)
-                unstow_package "$package" "$target_dir" "$dry_run"
-                ;;
-        esac
-    done
+    # Process tools
+    if [[ "$tool" == "all" ]]; then
+        log_info "Installing all tools..."
+        echo ""
+        for t in opencode claude; do
+            process_tool "$t" "$action" "$restow" "$dry_run"
+            echo ""
+        done
+    else
+        log_info "Installing: $tool"
+        echo ""
+        process_tool "$tool" "$action" "$restow" "$dry_run"
+        echo ""
+    fi
     
-    echo ""
     log_success "Setup complete!"
     echo ""
-    echo "Your AI harness configuration is now linked:"
-    echo "$PACKAGES" | tr ' ' '\n' | while IFS='|' read -r pkg target; do
-        echo "  $target/ -> $STOW_DIR/$pkg/"
-    done
-    echo ""
-    echo "Next steps:"
-    echo "  1. Review and customize configurations in this repo"
-    echo "  2. Set up your thoughts/ directory structure for context engineering"
-    echo "  3. Start using OpenCode with your configured agents and commands"
+    
+    if [[ "$action" == "stow" ]]; then
+        echo "Your AI harness configuration is now linked:"
+        if [[ "$tool" == "all" ]]; then
+            for t in opencode claude; do
+                local target=$(get_target_dir "$t")
+                echo "  $target/ -> $STOW_DIR/$t/"
+            done
+        else
+            local target=$(get_target_dir "$tool")
+            echo "  $target/ -> $STOW_DIR/$tool/"
+        fi
+        echo ""
+        echo "Next steps:"
+        echo "  1. Review and customize configurations in this repo"
+        echo "  2. Initialize your project with /init-harness (OpenCode) or /init_harness (Claude Code)"
+        echo "  3. Start using your AI tool with configured agents, commands, and skills"
+    else
+        echo "Symlinks have been removed."
+    fi
     echo ""
 }
 
