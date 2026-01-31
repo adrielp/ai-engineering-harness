@@ -45,6 +45,9 @@ get_target_dir() {
         claude)
             echo "$HOME/.claude"
             ;;
+        gemini)
+            echo "$HOME/.gemini"
+            ;;
         *)
             echo ""
             ;;
@@ -59,6 +62,7 @@ Usage:
 Tools:
   opencode    Install OpenCode configuration
   claude      Install Claude Code configuration
+  gemini      Install Gemini CLI configuration
   all         Install all configurations
 
 Options:
@@ -70,6 +74,7 @@ Options:
 Examples:
   ./setup.sh opencode              # Install OpenCode
   ./setup.sh claude --dry-run      # Preview Claude Code installation
+  ./setup.sh gemini                # Install Gemini CLI
   ./setup.sh all --restow          # Update all configurations
   ./setup.sh opencode --delete     # Remove OpenCode symlinks
 EOF
@@ -239,7 +244,7 @@ main() {
                 print_usage
                 exit 0
                 ;;
-            opencode|claude|all)
+            opencode|claude|gemini|all)
                 tool="$1"
                 shift
                 ;;
@@ -279,7 +284,7 @@ main() {
     if [[ "$tool" == "all" ]]; then
         log_info "Installing all tools..."
         echo ""
-        for t in opencode claude; do
+        for t in opencode claude gemini; do
             process_tool "$t" "$action" "$restow" "$dry_run"
             echo ""
         done
@@ -296,7 +301,7 @@ main() {
     if [[ "$action" == "stow" ]]; then
         echo "Your AI harness configuration is now linked:"
         if [[ "$tool" == "all" ]]; then
-            for t in opencode claude; do
+            for t in opencode claude gemini; do
                 local target=$(get_target_dir "$t")
                 echo "  $target/ -> $STOW_DIR/$t/"
             done
@@ -307,7 +312,7 @@ main() {
         echo ""
         echo "Next steps:"
         echo "  1. Review and customize configurations in this repo"
-        echo "  2. Initialize your project with /init-harness (OpenCode) or /init_harness (Claude Code)"
+        echo "  2. Initialize your project with /init-harness (OpenCode, Claude Code, Gemini CLI)"
         echo "  3. Start using your AI tool with configured agents, commands, and skills"
     else
         echo "Symlinks have been removed."

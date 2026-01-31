@@ -6,10 +6,10 @@ A harness for AI coding agents that provides context engineering patterns, comma
 
 - **OpenCode** (opencode.ai) - Supported ✓
 - **Claude Code** (code.claude.com) - Supported ✓
+- **Gemini CLI** (ai.google.dev/gemini-cli) - Supported ✓
 - **Cursor** - Not planned yet
 - **Windsurf** - Not planned yet
 - **GitHub Copilot CLI** - Not planned yet
-- **Gemini CLI** - Not planned yet
 
 ## Quick Start
 
@@ -46,24 +46,31 @@ cd ai-engineering-harness
 ./setup.sh claude             # Install Claude Code configuration
 ./setup.sh claude --dry-run   # Preview changes
 
-# Install for both
-./setup.sh all                # Install both configurations
+# Install for Gemini CLI
+./setup.sh gemini             # Install Gemini CLI configuration
+./setup.sh gemini --dry-run   # Preview changes
+
+# Install all three tools
+./setup.sh all                # Install OpenCode, Claude Code, and Gemini CLI
 ./setup.sh all --dry-run      # Preview changes
 
 # To update after pulling changes
 ./setup.sh opencode --restow  # Update OpenCode
 ./setup.sh claude --restow    # Update Claude Code
-./setup.sh all --restow       # Update both
+./setup.sh gemini --restow    # Update Gemini CLI
+./setup.sh all --restow       # Update all three
 
 # To remove symlinks
 ./setup.sh opencode --delete  # Remove OpenCode symlinks
 ./setup.sh claude --delete    # Remove Claude Code symlinks
+./setup.sh gemini --delete    # Remove Gemini CLI symlinks
 ./setup.sh all --delete       # Remove all symlinks
 ```
 
 This will symlink:
 - `opencode/` → `~/.config/opencode/` (for OpenCode)
 - `claude/` → `~/.claude/` (for Claude Code)
+- `gemini/` → `~/.gemini/` (for Gemini CLI)
 
 ## Why Stow?
 
@@ -83,12 +90,12 @@ Located in `opencode/` (symlinked to `~/.config/opencode/`):
 
 #### Agents
 Specialized sub-agents for different tasks:
-- `codebase-analyzer.md` - Analyzes implementation details and traces data flow
-- `codebase-locator.md` - Finds files and components by feature/topic
-- `codebase-pattern-finder.md` - Discovers similar implementations and patterns
-- `thoughts-analyzer.md` - Extracts insights from research documents
-- `thoughts-locator.md` - Discovers documents in the thoughts/ directory
-- `web-search-researcher.md` - Researches information from web sources
+- `codebase_analyzer` - Analyzes implementation details and traces data flow
+- `codebase_locator` - Finds files and components by feature/topic
+- `codebase_pattern_finder` - Discovers similar implementations and patterns
+- `thoughts_analyzer` - Extracts insights from research documents
+- `thoughts_locator` - Discovers documents in the thoughts/ directory
+- `web_search_researcher` - Researches information from web sources
 
 #### Commands
 Custom slash commands for workflows:
@@ -103,7 +110,7 @@ Custom slash commands for workflows:
 
 #### Skills
 Auto-triggered behaviors based on context:
-- `init-harness` - Initializes the harness in any repository (`/init-harness`)
+- `init_harness` - Initializes the harness in any repository (`/init_harness`)
 - `git-commit-helper` - Creates well-structured commits when you say "commit these changes"
 - `pr-description-generator` - Generates comprehensive PR descriptions following templates
 - `experimental-pr-workflow` - Formalizes experimental work into proper tickets and PRs
@@ -114,12 +121,12 @@ Located in `claude/` (symlinked to `~/.claude/`):
 
 #### Subagents
 Specialized subagents that Claude delegates to (same as OpenCode agents):
-- `codebase-analyzer.md` - Analyzes implementation details and traces data flow
-- `codebase-locator.md` - Finds files and components by feature/topic
-- `codebase-pattern-finder.md` - Discovers similar implementations and patterns
-- `thoughts-analyzer.md` - Extracts insights from research documents
-- `thoughts-locator.md` - Discovers documents in the thoughts/ directory
-- `web-search-researcher.md` - Researches information from web sources
+- `codebase_analyzer` - Analyzes implementation details and traces data flow
+- `codebase_locator` - Finds files and components by feature/topic
+- `codebase_pattern_finder` - Discovers similar implementations and patterns
+- `thoughts_analyzer` - Extracts insights from research documents
+- `thoughts_locator` - Discovers documents in the thoughts/ directory
+- `web_search_researcher` - Researches information from web sources
 
 #### Skills
 Skills that extend Claude's capabilities (commands + auto-triggered skills):
@@ -139,22 +146,52 @@ Skills that extend Claude's capabilities (commands + auto-triggered skills):
 - `pr-description-generator` - Triggers when creating pull requests
 - `experimental-pr-workflow` - Formalizes experimental work
 
+### For Gemini CLI
+
+Located in `gemini/` (symlinked to `~/.gemini/`):
+
+#### Agents
+Specialized agents for different tasks:
+- `codebase_analyzer` - Analyzes implementation details and traces data flow
+- `codebase_locator` - Finds files and components by feature/topic
+- `codebase_pattern_finder` - Discovers similar implementations and patterns
+- `thoughts_analyzer` - Extracts insights from research documents
+- `thoughts_locator` - Discovers documents in the thoughts/ directory
+- `web_search_researcher` - Researches information from web sources
+
+#### Commands
+Manual slash commands (TOML format):
+- `/create_plan` - Create detailed implementation plans
+- `/implement_plan` - Execute approved plans
+- `/validate_plan` - Verify implementation
+- `/research_codebase` - Comprehensive codebase research
+- `/commit` - Create well-structured git commits
+- `/debug` - Investigate issues
+- `/debug_k8s` - Debug Kubernetes clusters
+- `/init_harness` - Initialize harness
+
+#### Skills
+Auto-triggered skills:
+- `git_commit_helper` - Triggers when committing changes
+- `pr_description_generator` - Triggers when creating PRs
+- `experimental_pr_workflow` - Formalizes experimental work
+
 ### Command Reference
 
 Quick reference of all commands/skills across tools:
 
-| Command | OpenCode | Claude Code | Purpose |
-|---------|:--------:|:-----------:|---------|
-| `/init_harness` | ✓ | ✓ | Initialize harness in repository |
-| `/create_plan` | ✓ | ✓ | Create implementation plan from ticket |
-| `/implement_plan` | ✓ | ✓ | Execute approved plan |
-| `/validate_plan` | ✓ | ✓ | Verify implementation |
-| `/commit` | ✓ | ✓ | Create well-structured commits |
-| `/debug` | ✓ | ✓ | Investigate issues |
-| `/debug-k8s` | ✓ | ✓ | Debug Kubernetes clusters |
-| `/research_codebase` | ✓ | ✓ | Comprehensive codebase research |
+| Command | OpenCode | Claude Code | Gemini CLI | Purpose |
+|---------|:--------:|:-----------:|:----------:|---------|
+| `/init_harness` | ✓ | ✓ | ✓ | Initialize harness in repository |
+| `/create_plan` | ✓ | ✓ | ✓ | Create implementation plan from ticket |
+| `/implement_plan` | ✓ | ✓ | ✓ | Execute approved plan |
+| `/validate_plan` | ✓ | ✓ | ✓ | Verify implementation |
+| `/commit` | ✓ | ✓ | ✓ | Create well-structured commits |
+| `/debug` | ✓ | ✓ | ✓ | Investigate issues |
+| `/debug-k8s` | ✓ | ✓ | ✓ | Debug Kubernetes clusters |
+| `/research_codebase` | ✓ | ✓ | ✓ | Comprehensive codebase research |
 
-**Note**: OpenCode uses `/init-harness` (kebab-case) while Claude Code uses `/init_harness` (snake_case) due to tool conventions.
+**Note**: All tools now use `/init_harness` (snake_case) for consistency.
 
 ### Thoughts Directory Structure
 
@@ -186,7 +223,7 @@ cd your-project
 opencode
 
 # Initialize the harness (creates AGENTS.md and thoughts/ structure)
-/init-harness
+/init_harness
 ```
 
 **For Claude Code:**
@@ -198,8 +235,17 @@ claude
 /init_harness
 ```
 
+**For Gemini CLI:**
+```bash
+cd your-project
+gemini
+
+# Initialize the harness (creates GEMINI.md and thoughts/ structure)
+/init_harness
+```
+
 This will:
-1. Run `/init` to generate `AGENTS.md` (OpenCode) or `CLAUDE.md` (Claude Code) with codebase context
+1. Run `/init` to generate `AGENTS.md` (OpenCode), `CLAUDE.md` (Claude Code), or `GEMINI.md` (Gemini CLI) with codebase context
 2. Create the `thoughts/` directory structure
 3. Add a ticket template for consistent task definitions
 
@@ -216,7 +262,7 @@ This will:
 **For OpenCode:**
 ```bash
 # Initialize the harness in a new repo
-/init-harness
+/init_harness
 
 # Create an implementation plan from a ticket
 /create_plan thoughts/shared/tickets/PROJ-001-add-feature.md
@@ -232,6 +278,18 @@ This will:
 ```
 
 **For Claude Code:**
+```bash
+# Initialize the harness in a new repo
+/init_harness
+
+# The remaining commands are the same
+/create_plan thoughts/shared/tickets/PROJ-001-add-feature.md
+/implement_plan thoughts/shared/plans/add-feature.md
+/validate_plan thoughts/shared/plans/add-feature.md
+/commit
+```
+
+**For Gemini CLI:**
 ```bash
 # Initialize the harness in a new repo
 /init_harness
@@ -299,12 +357,7 @@ mkdir -p thoughts/$(whoami)/{tickets,plans}
 
 ## Roadmap
 
-See open tickets in `thoughts/shared/tickets/`:
-
-- ✓ [HARNESS-001](thoughts/shared/tickets/HARNESS-001-add-claude-code-support.md) - Add Claude Code support (Completed)
-- [HARNESS-002](thoughts/shared/tickets/HARNESS-002-add-cursor-support.md) - Add Cursor support
-- [HARNESS-003](thoughts/shared/tickets/HARNESS-003-mcp-server-configurations.md) - Expand MCP server configurations
-- [HARNESS-004](thoughts/shared/tickets/HARNESS-004-context-engineering-documentation.md) - Create comprehensive documentation
+Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## Contributing
 

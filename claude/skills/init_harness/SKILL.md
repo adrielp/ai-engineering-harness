@@ -20,30 +20,40 @@ Initialize the AI Engineering Harness in this repository.
 Follow these steps to initialize the harness:
 
 1. **Check the current state of the repository**
-   - Verify if CLAUDE.md already exists
-   - Check if thoughts/ directory exists
+    - Verify if `CLAUDE.md` already exists
+    - Check if thoughts/ directory exists
+    - Check if `AGENTS.md` already exists
 
 2. **Run /init to generate CLAUDE.md** (Claude Code's built-in command)
-   - This analyzes the codebase and generates project memory
+    - This analyzes the codebase and generates project memory
 
-3. **Create the thoughts/ directory structure**:
-   ```bash
-   mkdir -p thoughts/shared/{tickets,plans,research}
-   mkdir -p thoughts/global
-   ```
+3. **Update `CLAUDE.md` with reference to `AGENTS.md` if `AGENTS.md` exists**
+    - This ensures Claudes default memory file includes reference to AGENTS.md
+      if it exists.
 
-4. **Add the ticket template** to `thoughts/shared/tickets/ticket-template.md`
+4. **Create the thoughts/ directory structure**:
+    ```bash
+    mkdir -p thoughts/shared/{tickets,plans,research}
+    mkdir -p thoughts/global
+    ```
 
-5. **Optionally create a personal thoughts directory**:
-   ```bash
-   mkdir -p thoughts/$(whoami)/{tickets,plans}
-   ```
+5. **Add the ticket template** to `thoughts/global/ticket-template.md`
 
-6. **Present next steps to the user**
+6. **Optionally create a personal thoughts directory**:
+    - Check if personal directory exists
+    - Check if all directories within personal exist (tickets, plans, research)
+    ```bash
+    mkdir -p thoughts/$(whoami)/{tickets,plans,research}
+    ```
 
-**Important**: The `/init` command is Claude Code's built-in command that analyzes the codebase and generates CLAUDE.md (Claude Code's project memory file). This `/init_harness` skill wraps that functionality and adds the context engineering setup.
+7. **Present next steps to the user**
 
-**Note**: Claude Code uses `CLAUDE.md` for project memory, not `AGENTS.md`. The file naming is different from OpenCode, but the purpose is the same - storing project context and conventions.
+**Important**: The `/init` command is Claude Code's built-in command that
+analyzes the codebase and generates CLAUDE.md (Claude Code's project memory
+file). This `/init_harness` skill wraps that functionality and adds the context
+engineering setup.
+
+**Note**: Claude Code uses `CLAUDE.md` for project memory.
 
 ## Quick Reference
 

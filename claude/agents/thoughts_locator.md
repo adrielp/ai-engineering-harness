@@ -1,5 +1,5 @@
 ---
-name: thoughts-locator
+name: thoughts_locator
 description: Discovers relevant documents in the thoughts/ directory for metadata, research notes, decisions, and historical context. Specializes in locating and categorizing documentation across personal, shared, and global thought directories.
 ---
 

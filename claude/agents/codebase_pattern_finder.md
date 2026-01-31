@@ -1,5 +1,5 @@
 ---
-name: codebase-pattern-finder
+name: codebase_pattern_finder
 description: Finds similar implementations, usage examples, and existing patterns in the codebase with concrete code details. Use this agent when you need working examples to model after, want to see how similar features are implemented, or need to identify established patterns and conventions. Provides both file locations and actual code snippets.
 ---
 

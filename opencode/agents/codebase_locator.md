@@ -1,5 +1,5 @@
 ---
-name: codebase-locator
+name: codebase_locator
 description: Specialist agent for locating files, directories, and components relevant to features or tasks. Provides organized file location mappings without content analysis.
 ---
 

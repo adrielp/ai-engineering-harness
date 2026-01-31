@@ -1,5 +1,5 @@
 ---
-name: web-search-researcher
+name: web_search_researcher
 description: Researches information from web sources to find accurate, up-to-date answers. Use this agent when you need current information, modern best practices, or details not available in your training data. Call with a detailed research query describing what information you need.
 ---
 

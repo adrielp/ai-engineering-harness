@@ -1,0 +1,2 @@
+description = "Debug Kubernetes"
+prompt = "Activate the `debug_k8s` skill."

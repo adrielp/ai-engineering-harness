@@ -4,7 +4,7 @@
     "kubernetes": {
       "type": "local",
       "command": ["npx", "-y", "kubernetes-mcp-server@latest"],
-      "enabled": false
+      "enabled": true
     }
   }
 }

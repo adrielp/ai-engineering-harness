@@ -6,24 +6,28 @@
 
 **Purpose**: Configuration harness for AI coding agents with reusable prompts, agents, and workflows.
 
-**Supported Tools**: OpenCode, Claude Code (Cursor planned)
+**Supported Tools**: OpenCode, Claude Code, Gemini CLI
 
-**Installation**: `./setup.sh <tool>` where tool is `opencode`, `claude`, or `all`
+**Installation**: `./setup.sh <tool>` where tool is `opencode`, `claude`, `gemini`, or `all`
 
 ## Repository Structure
 
 ```
 ai-engineering-harness/
 ├── opencode/           → ~/.config/opencode/
-│   ├── agents/         # 6 subagents
+│   ├── agents/         # 6 agents (snake_case)
 │   ├── commands/       # 8 slash commands
 │   ├── skills/         # 4 auto-triggered skills
 │   └── opencode.json   # MCP configuration
 ├── claude/             → ~/.claude/
-│   ├── agents/         # 6 subagents
+│   ├── agents/         # 6 agents (snake_case)
 │   ├── skills/         # 11 skills (8 manual + 3 auto)
 │   ├── .mcp.json       # MCP configuration
 │   └── settings.json   # Settings schema
+├── gemini/             → ~/.gemini/
+│   ├── agents/         # 6 agents (snake_case)
+│   ├── commands/       # 11 commands (TOML format)
+│   └── skills/         # 11 skills (8 manual + 3 auto)
 └── thoughts/           # Context engineering artifacts
     ├── shared/tickets/ # Work items
     ├── shared/plans/   # Implementation plans
@@ -33,34 +37,34 @@ ai-engineering-harness/
 
 ## Commands & Skills
 
-| Command | Type | Description |
-|---------|------|-------------|
-| `/init_harness` | Manual | Initialize harness (creates AGENTS.md/CLAUDE.md + thoughts/) |
-| `/create_plan` | Manual | Generate implementation plan from ticket |
-| `/implement_plan` | Manual | Execute approved plan phase-by-phase |
-| `/validate_plan` | Manual | Verify implementation against plan |
-| `/commit` | Manual | Create well-structured git commits |
-| `/debug` | Manual | Investigate issues during testing |
-| `/debug-k8s` | Manual | Debug Kubernetes (prefers MCP, falls back to kubectl) |
-| `/research_codebase` | Manual | Comprehensive codebase research |
-| `git-commit-helper` | Auto | Triggers on "commit" keywords |
-| `pr-description-generator` | Auto | Triggers when creating PRs |
-| `experimental-pr-workflow` | Auto | Formalizes experimental work |
+| Command | OpenCode | Claude | Gemini | Type | Description |
+|---------|:--------:|:------:|:------:|------|-------------|
+| `/init_harness` | ✓ | ✓ | ✓ | Manual | Initialize harness (creates AGENTS.md/CLAUDE.md/GEMINI.md + thoughts/) |
+| `/create_plan` | ✓ | ✓ | ✓ | Manual | Generate implementation plan from ticket |
+| `/implement_plan` | ✓ | ✓ | ✓ | Manual | Execute approved plan phase-by-phase |
+| `/validate_plan` | ✓ | ✓ | ✓ | Manual | Verify implementation against plan |
+| `/commit` | ✓ | ✓ | ✓ | Manual | Create well-structured git commits |
+| `/debug` | ✓ | ✓ | ✓ | Manual | Investigate issues during testing |
+| `/debug_k8s` | ✓ | ✓ | ✓ | Manual | Debug Kubernetes (prefers MCP, falls back to kubectl) |
+| `/research_codebase` | ✓ | ✓ | ✓ | Manual | Comprehensive codebase research |
+| `git_commit_helper` | ✓ | ✓ | ✓ | Auto | Triggers on "commit" keywords |
+| `pr_description_generator` | ✓ | ✓ | ✓ | Auto | Triggers when creating PRs |
+| `experimental_pr_workflow` | ✓ | ✓ | ✓ | Auto | Formalizes experimental work |
 
-**Naming**: OpenCode uses `/init-harness` (kebab-case), Claude Code uses `/init_harness` (snake_case).
+**Naming**: All tools now use `/init_harness` (snake_case) for consistency.
 
 ## Agents
 
-All agents are identical across both tools:
+All agents are identical across all three tools:
 
-| Agent | Purpose |
-|-------|---------|
-| `codebase-analyzer` | Analyze implementation details, trace data flow |
-| `codebase-locator` | Find files/directories by feature or task |
-| `codebase-pattern-finder` | Discover similar implementations and patterns |
-| `thoughts-analyzer` | Extract insights from research documents |
-| `thoughts-locator` | Discover documents in thoughts/ directory |
-| `web-search-researcher` | Research information from web sources |
+| Agent | OpenCode | Claude | Gemini | Purpose |
+|-------|:--------:|:------:|:------:|---------|
+| `codebase_analyzer` | ✓ | ✓ | ✓ | Analyze implementation details, trace data flow |
+| `codebase_locator` | ✓ | ✓ | ✓ | Find files/directories by feature or task |
+| `codebase_pattern_finder` | ✓ | ✓ | ✓ | Discover similar implementations and patterns |
+| `thoughts_analyzer` | ✓ | ✓ | ✓ | Extract insights from research documents |
+| `thoughts_locator` | ✓ | ✓ | ✓ | Discover documents in thoughts/ directory |
+| `web_search_researcher` | ✓ | ✓ | ✓ | Research information from web sources |
 
 ## Workflow
 
@@ -80,18 +84,27 @@ Ticket → /create_plan → /implement_plan → /validate_plan → /commit
 |------|------|----------------|
 | OpenCode | `opencode.json` | `"enabled": false` |
 | Claude Code | `.mcp.json` | `"disabled": true` |
+| Gemini CLI | TBD | TBD |
 
-Available MCP servers: `kubernetes` (disabled by default in both)
+Available MCP servers: `kubernetes` (disabled by default)
 
 ## Tool-Specific Notes
 
 ### OpenCode
 - Project memory: `AGENTS.md` (generated by `/init`)
 - Commands and skills are separate directories
+- Agent naming: Uses snake_case convention
 - Config location: `~/.config/opencode/`
 
 ### Claude Code
 - Project memory: `CLAUDE.md` (generated by `/init`)
 - Commands implemented as skills with `disable-model-invocation: true`
+- Agent naming: Uses snake_case convention
 - Config location: `~/.claude/`
 - Supports `.claude/rules/` for modular instructions
+
+### Gemini CLI
+- Project memory: `GEMINI.md` (generated by `/init`)
+- Commands/skills: TOML format in `commands/` and `skills/`
+- Agent naming: Uses snake_case convention
+- Config location: `~/.gemini/`

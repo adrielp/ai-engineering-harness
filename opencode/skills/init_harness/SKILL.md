@@ -1,6 +1,6 @@
 ---
 name: init-harness
-description: Initializes the AI Engineering Harness in a repository by running /init to create AGENTS.md and setting up the thoughts/ directory structure for context engineering. Use when user runs /init-harness or asks to set up the harness in a new repo.
+description: Initializes the AI Engineering Harness in a repository by running /init to create AGENTS.md and setting up the thoughts/ directory structure for context engineering. Use when user runs /init_harness or asks to set up the harness in a new repo.
 allowed-tools: Read, Bash, Grep, Glob, Write
 ---
 
@@ -9,7 +9,7 @@ allowed-tools: Read, Bash, Grep, Glob, Write
 ## When to Use This Skill
 
 Activate this skill when the user:
-- Runs `/init-harness` command
+- Runs `/init_harness` command
 - Asks to "initialize the harness" or "set up the harness"
 - Asks to "set up context engineering" in a repository
 - Wants to prepare a repository for AI-assisted development workflows

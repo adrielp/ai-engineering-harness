@@ -1,5 +1,5 @@
 ---
-name: thoughts-analyzer
+name: thoughts_analyzer
 description: Specialized agent for deep analysis of research documents and thought notes. Extracts high-value insights, decisions, and actionable information while filtering noise.
 ---
 

@@ -20,7 +20,7 @@ Load and follow the `init-harness` skill for detailed instructions on how to:
 5. Optionally create a personal thoughts directory
 6. Present next steps to the user
 
-**Important**: The `/init` command is OpenCode's built-in command that analyzes the codebase and generates AGENTS.md. This `/init-harness` command wraps that functionality and adds the context engineering setup.
+**Important**: The `/init` command is OpenCode's built-in command that analyzes the codebase and generates AGENTS.md. This `/init_harness` command wraps that functionality and adds the context engineering setup.
 
 ## Quick Reference
 

@@ -1,5 +1,5 @@
 ---
-name: codebase-analyzer
+name: codebase_analyzer
 description: Analyzes codebase implementation details and explains how code works. Use this agent when you need to understand specific components, trace data flow, identify architectural patterns, or explain technical implementations. Provide detailed context about what you want analyzed for best results.
 ---
 

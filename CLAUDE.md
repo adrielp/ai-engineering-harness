@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is an AI Engineering Harness - a configuration repository that provides reusable agents, skills, and workflows for AI coding tools (OpenCode and Claude Code). Configurations are symlinked to tool-specific directories via GNU Stow.
+This is an AI Engineering Harness - a configuration repository that provides reusable agents, skills, and workflows for AI coding tools (OpenCode, Claude Code, and Gemini CLI). Configurations are symlinked to tool-specific directories via GNU Stow.
 
 ## Setup Commands
 
@@ -12,7 +12,8 @@ This is an AI Engineering Harness - a configuration repository that provides reu
 # Install configurations (requires GNU Stow)
 ./setup.sh claude             # Install Claude Code config to ~/.claude/
 ./setup.sh opencode           # Install OpenCode config to ~/.config/opencode/
-./setup.sh all                # Install both
+./setup.sh gemini             # Install Gemini CLI config to ~/.gemini/
+./setup.sh all                # Install all three
 
 # Useful flags
 ./setup.sh <tool> --dry-run   # Preview changes
@@ -26,12 +27,13 @@ This is an AI Engineering Harness - a configuration repository that provides reu
 
 - `claude/` → symlinks to `~/.claude/` (Claude Code)
 - `opencode/` → symlinks to `~/.config/opencode/` (OpenCode)
+- `gemini/` → symlinks to `~/.gemini/` (Gemini CLI)
 
-Both contain parallel structures:
-- `agents/` - Specialized subagents for research and analysis
-- `skills/` - Manual commands (invoked with `/skill-name`) and auto-triggered behaviors
+All three contain parallel structures:
+- `agents/` - Specialized subagents (now using snake_case naming)
+- `skills/` or `commands/` - Manual commands and auto-triggered behaviors
 
-OpenCode additionally has `commands/` (separate from skills), while Claude Code implements commands as skills with `disable-model-invocation: true`.
+OpenCode additionally has `commands/` (separate from skills), while Claude Code implements commands as skills with `disable-model-invocation: true`. Gemini CLI uses TOML format for both commands and skills.
 
 ### Thoughts Directory (Context Engineering)
 
