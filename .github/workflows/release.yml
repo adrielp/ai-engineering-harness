@@ -1,0 +1,31 @@
+name: Semantic Release
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+
+  release:
+    name: semantic release
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+
+    steps:
+      - uses: octo-sts/action@f603d3be9d8dd9871a265776e625a27b00effe05
+        id: octo-sts
+        with:
+          scope: adrielp/ai-engineering-harness
+          identity: semantic-release
+
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          token: ${{ steps.octo-sts.outputs.token }}
+
+      - name: Run go-semantic-release
+        uses: go-semantic-release/action@v1
+        with:
+          github-token: ${{ steps.octo-sts.outputs.token }}
+          changelog-generator-opt: emojis=true
