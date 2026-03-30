@@ -1,0 +1,396 @@
+#!/usr/bin/env -S deno run --allow-read --allow-write --allow-net --allow-env
+/**
+ * AI Engineering Harness Installer
+ *
+ * Usage (remote):
+ *   deno run --allow-read --allow-write --allow-net --allow-env \
+ *     https://raw.githubusercontent.com/adrielp/ai-engineering-harness/<SHA>/install.ts \
+ *     --tool=claude
+ *
+ * Usage (local):
+ *   deno run --allow-read --allow-write --allow-env install.ts --tool=claude
+ *
+ * Flags:
+ *   --tool=<claude|opencode|gemini|all>   Which tool configs to install (required)
+ *   --skill=<name>[,<name>]               One or more specific components to install
+ *   --interactive, -i                     Terminal checkbox picker for component selection
+ *   --dry-run, -n                         Preview changes without writing
+ *   --yes, -y                             Skip confirmation prompts
+ *   --mode=repo                           Print instructions for clone+stow mode instead
+ *   --dest=<path>                         Clone destination for repo mode (default: ~/.ai-engineering-harness)
+ *   --help, -h                            Show this help
+ */
+
+import { parseArgs } from "jsr:@std/cli@1/parse-args";
+import { ensureDir } from "jsr:@std/fs@1/ensure-dir";
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+interface FileEntry {
+  src: string;
+  dest: string;
+}
+
+interface Component {
+  description: string;
+  files: FileEntry[];
+}
+
+interface ToolConfig {
+  target: string;
+  components: Record<string, Component>;
+}
+
+interface Manifest {
+  version: string;
+  tools: Record<string, ToolConfig>;
+}
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+function expandHome(p: string): string {
+  if (p.startsWith("~/") || p === "~") {
+    const home = Deno.env.get("HOME") ?? Deno.env.get("USERPROFILE") ?? "";
+    return home + p.slice(1);
+  }
+  return p;
+}
+
+function isRemote(url: string): boolean {
+  return url.startsWith("http://") || url.startsWith("https://");
+}
+
+/** Derive the base raw GitHub URL from the script's import.meta.url */
+function deriveBaseUrl(): string | null {
+  const url = import.meta.url;
+  if (!isRemote(url)) return null;
+  // e.g. https://raw.githubusercontent.com/adrielp/ai-engineering-harness/<SHA>/install.ts
+  return url.slice(0, url.lastIndexOf("/") + 1);
+}
+
+async function loadManifest(baseUrl: string | null): Promise<Manifest> {
+  if (baseUrl) {
+    const manifestUrl = `${baseUrl}manifest.json`;
+    const resp = await fetch(manifestUrl);
+    if (!resp.ok) {
+      throw new Error(`Failed to fetch manifest from ${manifestUrl}: ${resp.status} ${resp.statusText}`);
+    }
+    return resp.json() as Promise<Manifest>;
+  }
+  // Local mode: read from filesystem relative to CWD
+  const text = await Deno.readTextFile("manifest.json");
+  return JSON.parse(text) as Manifest;
+}
+
+async function readFileIfExists(path: string): Promise<string | null> {
+  try {
+    return await Deno.readTextFile(path);
+  } catch {
+    return null;
+  }
+}
+
+async function fetchRemoteFile(baseUrl: string, src: string): Promise<string> {
+  const url = `${baseUrl}${src}`;
+  const resp = await fetch(url);
+  if (!resp.ok) {
+    throw new Error(`Failed to fetch ${url}: ${resp.status} ${resp.statusText}`);
+  }
+  return resp.text();
+}
+
+/**
+ * Minimal unified-style line diff (no external dependency).
+ * Shows only changed lines with +/- prefixes.
+ */
+function renderDiff(oldText: string, newText: string): string {
+  const oldLines = oldText.split("\n");
+  const newLines = newText.split("\n");
+  const lines: string[] = [];
+  const maxLen = Math.max(oldLines.length, newLines.length);
+  for (let i = 0; i < maxLen; i++) {
+    const o = oldLines[i];
+    const n = newLines[i];
+    if (o === n) continue;
+    if (o !== undefined) lines.push(`- ${o}`);
+    if (n !== undefined) lines.push(`+ ${n}`);
+  }
+  return lines.join("\n");
+}
+
+async function promptConfirm(message: string): Promise<boolean> {
+  const buf = new Uint8Array(1);
+  Deno.stdout.writeSync(new TextEncoder().encode(`${message} [y/N] `));
+  await Deno.stdin.read(buf);
+  return buf[0] === 121 || buf[0] === 89; // 'y' or 'Y'
+}
+
+function printHelp(): void {
+  console.log(`
+AI Engineering Harness Installer
+
+USAGE:
+  deno run --allow-read --allow-write --allow-net --allow-env install.ts [options]
+
+OPTIONS:
+  --tool=<claude|opencode|gemini|all>   Which tool configs to install (required)
+  --skill=<name>[,<name>]               Specific component names to install
+  --interactive, -i                     Interactive checkbox picker
+  --dry-run, -n                         Preview without writing files
+  --yes, -y                             Skip confirmation prompts
+  --mode=repo                           Show clone+stow instructions instead
+  --dest=<path>                         Clone destination for --mode=repo
+  --help, -h                            Show this help
+
+EXAMPLES:
+  # Install all Claude Code configs
+  deno run ... install.ts --tool=claude
+
+  # Preview without writing
+  deno run ... install.ts --tool=claude --dry-run
+
+  # Install a single skill
+  deno run ... install.ts --tool=claude --skill=skill/git-commit-helper
+
+  # Install multiple components
+  deno run ... install.ts --tool=claude --skill=agents,skill/git-commit-helper
+
+  # Interactive picker
+  deno run ... install.ts --tool=claude --interactive
+
+  # Install all tools
+  deno run ... install.ts --tool=all
+
+  # Clone + stow mode (power users)
+  deno run ... install.ts --mode=repo --dest=~/.ai-engineering-harness
+`.trim());
+}
+
+function printRepoModeInstructions(dest: string): void {
+  const expanded = expandHome(dest);
+  console.log(`
+Repo / Power-User Mode (GNU Stow)
+==================================
+This mode clones the repository and uses GNU Stow to create symlinks.
+The repo must remain at a stable path on your system.
+
+  1. Install GNU Stow:
+       macOS:          brew install stow
+       Ubuntu/Debian:  sudo apt install stow
+       Fedora:         sudo dnf install stow
+       Arch:           sudo pacman -S stow
+
+  2. Clone the repository:
+       git clone https://github.com/adrielp/ai-engineering-harness.git ${expanded}
+       cd ${expanded}
+
+  3. Install symlinks:
+       ./setup.sh claude             # Claude Code
+       ./setup.sh opencode           # OpenCode
+       ./setup.sh gemini             # Gemini CLI
+       ./setup.sh all                # All three
+
+  4. Update after pulling changes:
+       ./setup.sh all --restow
+`.trim());
+}
+
+// ---------------------------------------------------------------------------
+// Interactive picker using stdin (no external dependency)
+// ---------------------------------------------------------------------------
+
+async function interactivePicker(components: Array<{ name: string; description: string }>): Promise<string[]> {
+  // Minimal TTY-based checkbox: render options, user types space-separated indices
+  console.log("\nAvailable components (enter numbers separated by spaces, or 'all'):\n");
+  components.forEach((c, i) => {
+    console.log(`  ${String(i + 1).padStart(2)}. [${c.name}] ${c.description}`);
+  });
+  console.log();
+
+  const buf = new Uint8Array(1024);
+  Deno.stdout.writeSync(new TextEncoder().encode("Select (e.g. 1 3 5, or 'all'): "));
+  const n = await Deno.stdin.read(buf);
+  const input = new TextDecoder().decode(buf.subarray(0, n ?? 0)).trim();
+
+  if (input.toLowerCase() === "all") {
+    return components.map((c) => c.name);
+  }
+
+  const indices = input.split(/\s+/).map(Number).filter((n) => !isNaN(n) && n >= 1 && n <= components.length);
+  return indices.map((i) => components[i - 1].name);
+}
+
+// ---------------------------------------------------------------------------
+// Core installer
+// ---------------------------------------------------------------------------
+
+interface InstallOptions {
+  tool: string;
+  skills: string[];
+  interactive: boolean;
+  dryRun: boolean;
+  yes: boolean;
+  baseUrl: string | null;
+}
+
+async function installTool(manifest: Manifest, toolName: string, opts: InstallOptions): Promise<void> {
+  const toolConfig = manifest.tools[toolName];
+  if (!toolConfig) {
+    console.error(`Unknown tool: "${toolName}". Available: ${Object.keys(manifest.tools).join(", ")}`);
+    Deno.exit(1);
+  }
+
+  const targetDir = expandHome(toolConfig.target);
+  const allComponents = Object.entries(toolConfig.components).map(([name, comp]) => ({
+    name,
+    description: comp.description,
+    files: comp.files,
+  }));
+
+  let selectedComponents = allComponents;
+
+  if (opts.skills.length > 0) {
+    selectedComponents = allComponents.filter((c) => opts.skills.includes(c.name));
+    const unknown = opts.skills.filter((s) => !allComponents.find((c) => c.name === s));
+    if (unknown.length > 0) {
+      console.error(`Unknown components for ${toolName}: ${unknown.join(", ")}`);
+      console.error(`Available: ${allComponents.map((c) => c.name).join(", ")}`);
+      Deno.exit(1);
+    }
+  } else if (opts.interactive) {
+    const chosen = await interactivePicker(allComponents);
+    selectedComponents = allComponents.filter((c) => chosen.includes(c.name));
+    if (selectedComponents.length === 0) {
+      console.log("No components selected. Skipping.");
+      return;
+    }
+  }
+
+  console.log(`\nInstalling ${toolName} → ${targetDir}`);
+  if (opts.dryRun) {
+    console.log("  (dry run — no files will be written)\n");
+  }
+
+  let installed = 0;
+  let skipped = 0;
+  let unchanged = 0;
+
+  for (const comp of selectedComponents) {
+    for (const fileEntry of comp.files) {
+      const destPath = `${targetDir}/${fileEntry.dest}`;
+
+      // Get source content
+      let srcContent: string;
+      if (opts.baseUrl) {
+        srcContent = await fetchRemoteFile(opts.baseUrl, fileEntry.src);
+      } else {
+        srcContent = await Deno.readTextFile(fileEntry.src);
+      }
+
+      // Check existing destination
+      const existingContent = await readFileIfExists(destPath);
+
+      if (existingContent !== null && existingContent === srcContent) {
+        console.log(`  ✓ unchanged  ${fileEntry.dest}`);
+        unchanged++;
+        continue;
+      }
+
+      if (existingContent !== null && existingContent !== srcContent) {
+        // Show diff and prompt
+        console.log(`\n  ~ conflict   ${fileEntry.dest}`);
+        if (!opts.yes) {
+          const diff = renderDiff(existingContent, srcContent);
+          console.log("  --- existing");
+          console.log("  +++ incoming");
+          console.log(diff.split("\n").map((l) => "  " + l).join("\n"));
+          console.log();
+
+          if (opts.dryRun) {
+            console.log("  [dry-run] would overwrite");
+            installed++;
+            continue;
+          }
+
+          const ok = await promptConfirm(`  Overwrite ${fileEntry.dest}?`);
+          if (!ok) {
+            console.log("  Skipped.");
+            skipped++;
+            continue;
+          }
+        }
+      }
+
+      if (opts.dryRun) {
+        const action = existingContent === null ? "create" : "overwrite";
+        console.log(`  + ${action.padEnd(9)}  ${fileEntry.dest}`);
+        installed++;
+        continue;
+      }
+
+      await ensureDir(destPath.slice(0, destPath.lastIndexOf("/")));
+      await Deno.writeTextFile(destPath, srcContent);
+      const action = existingContent === null ? "installed" : "updated";
+      console.log(`  ✓ ${action.padEnd(9)}  ${fileEntry.dest}`);
+      installed++;
+    }
+  }
+
+  console.log(`\n  ${toolName}: ${installed} installed/updated, ${unchanged} unchanged, ${skipped} skipped`);
+}
+
+// ---------------------------------------------------------------------------
+// Entry point
+// ---------------------------------------------------------------------------
+
+const args = parseArgs(Deno.args, {
+  string: ["tool", "skill", "dest", "mode"],
+  boolean: ["interactive", "dry-run", "yes", "help"],
+  alias: { h: "help", n: "dry-run", y: "yes", i: "interactive" },
+});
+
+if (args.help) {
+  printHelp();
+  Deno.exit(0);
+}
+
+if (args.mode === "repo") {
+  const dest = (args.dest as string | undefined) ?? "~/.ai-engineering-harness";
+  printRepoModeInstructions(dest);
+  Deno.exit(0);
+}
+
+if (!args.tool) {
+  console.error("Error: --tool is required.\n");
+  printHelp();
+  Deno.exit(1);
+}
+
+const baseUrl = deriveBaseUrl();
+const manifest = await loadManifest(baseUrl);
+
+const skillFilter: string[] = args.skill
+  ? String(args.skill).split(",").map((s: string) => s.trim()).filter(Boolean)
+  : [];
+
+const installOpts: InstallOptions = {
+  tool: String(args.tool),
+  skills: skillFilter,
+  interactive: Boolean(args.interactive),
+  dryRun: Boolean(args["dry-run"]),
+  yes: Boolean(args.yes),
+  baseUrl,
+};
+
+const toolArg = String(args.tool);
+const toolsToInstall = toolArg === "all" ? Object.keys(manifest.tools) : [toolArg];
+
+for (const tool of toolsToInstall) {
+  await installTool(manifest, tool, installOpts);
+}
+
+console.log("\nDone.");
