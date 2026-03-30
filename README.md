@@ -33,28 +33,28 @@ npx deno run ...
 
 ### Install
 
-Replace `<SHA>` with the latest commit SHA from the
-[commits page](https://github.com/adrielp/ai-engineering-harness/commits/main).
+Replace `<TAG_OR_SHA>` with a git tag (e.g. `v1.0.0`) or commit SHA. Find the
+latest on the [releases page](https://github.com/adrielp/ai-engineering-harness/releases).
 
 ```bash
 # Install all Claude Code configs
 deno run --allow-read --allow-write --allow-net --allow-env \
-  https://raw.githubusercontent.com/adrielp/ai-engineering-harness/<SHA>/install.ts \
+  https://raw.githubusercontent.com/adrielp/ai-engineering-harness/<TAG_OR_SHA>/install.ts \
   --tool=claude
 
 # Install all OpenCode configs
 deno run --allow-read --allow-write --allow-net --allow-env \
-  https://raw.githubusercontent.com/adrielp/ai-engineering-harness/<SHA>/install.ts \
+  https://raw.githubusercontent.com/adrielp/ai-engineering-harness/<TAG_OR_SHA>/install.ts \
   --tool=opencode
 
 # Install all Gemini CLI configs
 deno run --allow-read --allow-write --allow-net --allow-env \
-  https://raw.githubusercontent.com/adrielp/ai-engineering-harness/<SHA>/install.ts \
+  https://raw.githubusercontent.com/adrielp/ai-engineering-harness/<TAG_OR_SHA>/install.ts \
   --tool=gemini
 
 # Install all three tools at once
 deno run --allow-read --allow-write --allow-net --allow-env \
-  https://raw.githubusercontent.com/adrielp/ai-engineering-harness/<SHA>/install.ts \
+  https://raw.githubusercontent.com/adrielp/ai-engineering-harness/<TAG_OR_SHA>/install.ts \
   --tool=all
 
 # Preview without writing anything
