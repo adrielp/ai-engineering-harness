@@ -53,9 +53,9 @@ power users.
 | Decision | Choice | Rationale |
 |---|---|---|
 | Skill discovery | Static `manifest.json` | No extra API dependency; works in air-gapped / private repos; maintainable |
-| Interactive UX | `@cliffy/prompt` from JSR | Full-featured, Deno-native, well-maintained on JSR |
+| Interactive UX | Custom number-picker via stdin | No external dependency; simple and sufficient |
 | Default (no `--skill`) | Install all components for the tool | Safest, most intuitive default |
-| Diff library | `@std/diff` from JSR | Part of Deno std, minimal footprint |
+| Diff library | Built-in LCS diff | `@std/diff` not available on JSR; inline LCS implementation has zero dependencies |
 | Conflict strategy | Prompt per-file (skip with `--yes`) | Shows diff; user decides per file |
 | Rollback | None | Git handles recovery; `.bak` files add noise |
 | Repo mode trigger | Explicit `--mode=repo` | Clear; avoids surprising behavior |
@@ -173,9 +173,6 @@ parseArgs()
 
 ```typescript
 import { parseArgs } from "jsr:@std/cli@1/parse-args";
-import { difference } from "jsr:@std/diff@1";
-import { Checkbox } from "jsr:@cliffy/prompt@1/checkbox";
-import { expandGlob } from "jsr:@std/fs@1/expand-glob";
 import { ensureDir } from "jsr:@std/fs@1/ensure-dir";
 ```
 
@@ -186,8 +183,8 @@ import { ensureDir } from "jsr:@std/fs@1/ensure-dir";
 - Manifest loading: when running from a raw GitHub URL, the script infers
   the base URL and fetches `manifest.json` from the same SHA. When running
   locally, reads from `./manifest.json`.
-- Diff display: uses `@std/diff` to produce a unified-like diff, printed to
-  stderr before prompting.
+- Diff display: uses a built-in LCS algorithm to produce a unified-like diff,
+  printed to stdout before prompting.
 - `--mode=repo`: prints instructions to clone and run `setup.sh` (does not
   invoke stow itself — Deno would need `--allow-run` and that adds friction).
 - Permissions required: `--allow-read --allow-write --allow-net --allow-env`
@@ -206,14 +203,10 @@ const args = parseArgs(Deno.args, {
 
 **`--tool=all`**: expands to all three tools, runs sequentially.
 
-**Interactive mode** (cliffy Checkbox):
+**Interactive mode** (custom number-picker via stdin):
 
-```typescript
-const selected = await Checkbox.prompt({
-  message: "Select components to install",
-  options: components.map(c => ({ name: c.description, value: c.name })),
-});
-```
+User is shown a numbered list and types space-separated indices or `all`.
+No external dependency required.
 
 ### Success Criteria
 
@@ -306,7 +299,7 @@ script, not a library):
 
 - Original ticket: `thoughts/adriel/tickets/01-deno-install-support.md`
 - Current installer: `setup.sh`
-- Deno std diff: https://jsr.io/@std/diff
+
 - Deno std fs: https://jsr.io/@std/fs
-- Cliffy prompt: https://jsr.io/@cliffy/prompt
+
 - Deno permissions: https://docs.deno.com/runtime/fundamentals/security/

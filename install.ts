@@ -104,29 +104,64 @@ async function fetchRemoteFile(baseUrl: string, src: string): Promise<string> {
 }
 
 /**
- * Minimal unified-style line diff (no external dependency).
- * Shows only changed lines with +/- prefixes.
+ * LCS-based unified diff. Computes the longest common subsequence of lines
+ * and renders added/removed lines with +/- prefixes.
  */
 function renderDiff(oldText: string, newText: string): string {
   const oldLines = oldText.split("\n");
   const newLines = newText.split("\n");
+
+  // Build LCS table
+  const m = oldLines.length;
+  const n = newLines.length;
+  const dp: number[][] = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] = oldLines[i - 1] === newLines[j - 1]
+        ? dp[i - 1][j - 1] + 1
+        : Math.max(dp[i - 1][j], dp[i][j - 1]);
+    }
+  }
+
+  // Backtrack to produce diff
   const lines: string[] = [];
-  const maxLen = Math.max(oldLines.length, newLines.length);
-  for (let i = 0; i < maxLen; i++) {
-    const o = oldLines[i];
-    const n = newLines[i];
-    if (o === n) continue;
-    if (o !== undefined) lines.push(`- ${o}`);
-    if (n !== undefined) lines.push(`+ ${n}`);
+  let i = m, j = n;
+  const stack: string[] = [];
+  while (i > 0 || j > 0) {
+    if (i > 0 && j > 0 && oldLines[i - 1] === newLines[j - 1]) {
+      stack.push(`  ${oldLines[i - 1]}`);
+      i--; j--;
+    } else if (j > 0 && (i === 0 || dp[i][j - 1] >= dp[i - 1][j])) {
+      stack.push(`+ ${newLines[j - 1]}`);
+      j--;
+    } else {
+      stack.push(`- ${oldLines[i - 1]}`);
+      i--;
+    }
+  }
+  // Reverse since we backtracked
+  for (let k = stack.length - 1; k >= 0; k--) {
+    lines.push(stack[k]);
   }
   return lines.join("\n");
 }
 
-async function promptConfirm(message: string): Promise<boolean> {
+async function readLine(): Promise<string> {
+  const chunks: Uint8Array[] = [];
   const buf = new Uint8Array(1);
+  while (true) {
+    const n = await Deno.stdin.read(buf);
+    if (n === null) break;
+    if (buf[0] === 10) break; // newline
+    chunks.push(buf.slice());
+  }
+  return new TextDecoder().decode(new Uint8Array(chunks.flatMap((c) => [...c]))).trim();
+}
+
+async function promptConfirm(message: string): Promise<boolean> {
   Deno.stdout.writeSync(new TextEncoder().encode(`${message} [y/N] `));
-  await Deno.stdin.read(buf);
-  return buf[0] === 121 || buf[0] === 89; // 'y' or 'Y'
+  const input = await readLine();
+  return input === "y" || input === "Y";
 }
 
 function printHelp(): void {
@@ -211,10 +246,8 @@ async function interactivePicker(components: Array<{ name: string; description: 
   });
   console.log();
 
-  const buf = new Uint8Array(1024);
   Deno.stdout.writeSync(new TextEncoder().encode("Select (e.g. 1 3 5, or 'all'): "));
-  const n = await Deno.stdin.read(buf);
-  const input = new TextDecoder().decode(buf.subarray(0, n ?? 0)).trim();
+  const input = await readLine();
 
   if (input.toLowerCase() === "all") {
     return components.map((c) => c.name);
@@ -257,9 +290,12 @@ async function installTool(manifest: Manifest, toolName: string, opts: InstallOp
     selectedComponents = allComponents.filter((c) => opts.skills.includes(c.name));
     const unknown = opts.skills.filter((s) => !allComponents.find((c) => c.name === s));
     if (unknown.length > 0) {
-      console.error(`Unknown components for ${toolName}: ${unknown.join(", ")}`);
-      console.error(`Available: ${allComponents.map((c) => c.name).join(", ")}`);
-      Deno.exit(1);
+      console.warn(`  Warning: unknown components for ${toolName}: ${unknown.join(", ")}`);
+      console.warn(`  Available: ${allComponents.map((c) => c.name).join(", ")}`);
+    }
+    if (selectedComponents.length === 0) {
+      console.error(`  No valid components matched. Skipping ${toolName}.`);
+      return;
     }
   } else if (opts.interactive) {
     const chosen = await interactivePicker(allComponents);
@@ -280,6 +316,22 @@ async function installTool(manifest: Manifest, toolName: string, opts: InstallOp
   let unchanged = 0;
 
   for (const comp of selectedComponents) {
+    // Warn before installing user-specific config files in the default flow
+    if (comp.name === "settings" && !opts.yes && opts.skills.length === 0) {
+      console.log(`\n  ⚠ The "settings" component contains tool-specific config files`);
+      console.log(`    (settings.json, .mcp.json) that may overwrite your existing settings.`);
+      if (opts.dryRun) {
+        console.log("  [dry-run] would prompt for confirmation");
+      } else {
+        const ok = await promptConfirm(`  Install settings component?`);
+        if (!ok) {
+          console.log("  Skipped settings component.");
+          skipped += comp.files.length;
+          continue;
+        }
+      }
+    }
+
     for (const fileEntry of comp.files) {
       const destPath = `${targetDir}/${fileEntry.dest}`;
 
