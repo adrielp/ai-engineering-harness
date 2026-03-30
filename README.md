@@ -15,7 +15,73 @@ A harness for AI coding agents that provides context engineering patterns, comma
 
 ### Prerequisites
 
-- [GNU Stow](https://www.gnu.org/software/stow/) - Symlink farm manager
+- [Deno](https://deno.com/) — the only requirement for the default install path
+
+```bash
+# macOS / Linux
+curl -fsSL https://deno.land/install.sh | sh
+
+# macOS (Homebrew)
+brew install deno
+
+# No Deno? Use npx as a zero-install fallback (slower first run):
+npx deno run ...
+```
+
+> **Private repo:** Authenticate with `gh auth login` before running the
+> installer. Both SSH and HTTPS are supported; SAML SSO is handled automatically.
+
+### Install
+
+Replace `<TAG_OR_SHA>` with a git tag (e.g. `v1.0.0`) or commit SHA. Find the
+latest on the [releases page](https://github.com/adrielp/ai-engineering-harness/releases).
+
+```bash
+# Install all Claude Code configs
+deno run --allow-read --allow-write --allow-net --allow-env \
+  https://raw.githubusercontent.com/adrielp/ai-engineering-harness/<TAG_OR_SHA>/install.ts \
+  --tool=claude
+
+# Install all OpenCode configs
+deno run --allow-read --allow-write --allow-net --allow-env \
+  https://raw.githubusercontent.com/adrielp/ai-engineering-harness/<TAG_OR_SHA>/install.ts \
+  --tool=opencode
+
+# Install all Gemini CLI configs
+deno run --allow-read --allow-write --allow-net --allow-env \
+  https://raw.githubusercontent.com/adrielp/ai-engineering-harness/<TAG_OR_SHA>/install.ts \
+  --tool=gemini
+
+# Install all three tools at once
+deno run --allow-read --allow-write --allow-net --allow-env \
+  https://raw.githubusercontent.com/adrielp/ai-engineering-harness/<TAG_OR_SHA>/install.ts \
+  --tool=all
+
+# Preview without writing anything
+deno run ... install.ts --tool=claude --dry-run
+
+# Install a single skill
+deno run ... install.ts --tool=claude --skill=skill/git-commit-helper
+
+# Install multiple specific components
+deno run ... install.ts --tool=claude --skill=agents,skill/git-commit-helper
+
+# Interactive checkbox picker
+deno run ... install.ts --tool=claude --interactive
+```
+
+Files are copied as real files — nothing breaks if you discard the installer.
+Re-running is safe: unchanged files are skipped, modified files show a diff and
+prompt for confirmation.
+
+## Advanced: Repo / Power-User Mode (GNU Stow)
+
+For users who want the repo to live permanently on their system with symlinks
+(easier to update via `git pull`), use the stow-based setup.
+
+### Prerequisites
+
+- [GNU Stow](https://www.gnu.org/software/stow/) — symlink farm manager
 
 ```bash
 # macOS
@@ -72,15 +138,11 @@ This will symlink:
 - `claude/` → `~/.claude/` (for Claude Code)
 - `gemini/` → `~/.gemini/` (for Gemini CLI)
 
-## Why Stow?
+### Why Stow?
 
-GNU Stow is the preferred method for managing configuration symlinks because:
-
-- **Non-destructive**: Creates symlinks without modifying original files
-- **Reversible**: Easy to enable/disable configurations
-- **Version control friendly**: Your configs live in a git repo
-- **Package-based**: Multiple tools can be managed independently
-- **Battle-tested**: Used by dotfile managers for decades
+GNU Stow creates symlinks without modifying original files, is easy to
+enable/disable, integrates cleanly with version control, and supports managing
+multiple tool packages independently.
 
 ## What's Included
 

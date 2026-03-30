@@ -1,0 +1,336 @@
+{
+  "version": "1",
+  "tools": {
+    "claude": {
+      "target": "~/.claude",
+      "components": {
+        "settings": {
+          "description": "Claude Code global settings and MCP configuration",
+          "files": [
+            { "src": "claude/settings.json", "dest": "settings.json" },
+            { "src": "claude/.mcp.json",     "dest": ".mcp.json"     }
+          ]
+        },
+        "agents": {
+          "description": "Specialized subagents for Claude Code",
+          "files": [
+            { "src": "claude/agents/codebase_analyzer.md",      "dest": "agents/codebase_analyzer.md"      },
+            { "src": "claude/agents/codebase_locator.md",       "dest": "agents/codebase_locator.md"       },
+            { "src": "claude/agents/codebase_pattern_finder.md","dest": "agents/codebase_pattern_finder.md" },
+            { "src": "claude/agents/thoughts_analyzer.md",      "dest": "agents/thoughts_analyzer.md"      },
+            { "src": "claude/agents/thoughts_locator.md",       "dest": "agents/thoughts_locator.md"       },
+            { "src": "claude/agents/web_search_researcher.md",  "dest": "agents/web_search_researcher.md"  }
+          ]
+        },
+        "skill/commit": {
+          "description": "Git commit workflow skill",
+          "files": [
+            { "src": "claude/skills/commit/SKILL.md", "dest": "skills/commit/SKILL.md" }
+          ]
+        },
+        "skill/create_plan": {
+          "description": "Create detailed implementation plans skill",
+          "files": [
+            { "src": "claude/skills/create_plan/SKILL.md", "dest": "skills/create_plan/SKILL.md" }
+          ]
+        },
+        "skill/debug": {
+          "description": "Debugging investigation skill",
+          "files": [
+            { "src": "claude/skills/debug/SKILL.md", "dest": "skills/debug/SKILL.md" }
+          ]
+        },
+        "skill/debug-k8s": {
+          "description": "Kubernetes cluster debugging skill",
+          "files": [
+            { "src": "claude/skills/debug-k8s/SKILL.md", "dest": "skills/debug-k8s/SKILL.md" }
+          ]
+        },
+        "skill/experimental-pr-workflow": {
+          "description": "Experimental PR workflow (no-ticket commits) skill",
+          "files": [
+            { "src": "claude/skills/experimental-pr-workflow/SKILL.md", "dest": "skills/experimental-pr-workflow/SKILL.md" }
+          ]
+        },
+        "skill/git-commit-helper": {
+          "description": "Auto-triggered git commit helper skill",
+          "files": [
+            { "src": "claude/skills/git-commit-helper/SKILL.md", "dest": "skills/git-commit-helper/SKILL.md" }
+          ]
+        },
+        "skill/implement_plan": {
+          "description": "Execute an approved implementation plan skill",
+          "files": [
+            { "src": "claude/skills/implement_plan/SKILL.md", "dest": "skills/implement_plan/SKILL.md" }
+          ]
+        },
+        "skill/init_harness": {
+          "description": "Initialize harness in a new repository skill",
+          "files": [
+            { "src": "claude/skills/init_harness/SKILL.md", "dest": "skills/init_harness/SKILL.md" }
+          ]
+        },
+        "skill/pr-description-generator": {
+          "description": "Automated PR description generator skill",
+          "files": [
+            { "src": "claude/skills/pr-description-generator/SKILL.md", "dest": "skills/pr-description-generator/SKILL.md" }
+          ]
+        },
+        "skill/research_codebase": {
+          "description": "Comprehensive codebase research skill",
+          "files": [
+            { "src": "claude/skills/research_codebase/SKILL.md", "dest": "skills/research_codebase/SKILL.md" }
+          ]
+        },
+        "skill/validate_plan": {
+          "description": "Validate an implementation against its plan skill",
+          "files": [
+            { "src": "claude/skills/validate_plan/SKILL.md", "dest": "skills/validate_plan/SKILL.md" }
+          ]
+        }
+      }
+    },
+    "opencode": {
+      "target": "~/.config/opencode",
+      "components": {
+        "settings": {
+          "description": "OpenCode global configuration",
+          "files": [
+            { "src": "opencode/opencode.json", "dest": "opencode.json" }
+          ]
+        },
+        "agents": {
+          "description": "Specialized subagents for OpenCode",
+          "files": [
+            { "src": "opencode/agents/codebase_analyzer.md",      "dest": "agents/codebase_analyzer.md"      },
+            { "src": "opencode/agents/codebase_locator.md",       "dest": "agents/codebase_locator.md"       },
+            { "src": "opencode/agents/codebase_pattern_finder.md","dest": "agents/codebase_pattern_finder.md" },
+            { "src": "opencode/agents/thoughts_analyzer.md",      "dest": "agents/thoughts_analyzer.md"      },
+            { "src": "opencode/agents/thoughts_locator.md",       "dest": "agents/thoughts_locator.md"       },
+            { "src": "opencode/agents/web_search_researcher.md",  "dest": "agents/web_search_researcher.md"  }
+          ]
+        },
+        "command/commit": {
+          "description": "Git commit workflow command",
+          "files": [
+            { "src": "opencode/commands/commit.md", "dest": "commands/commit.md" }
+          ]
+        },
+        "command/create_plan": {
+          "description": "Create implementation plans command",
+          "files": [
+            { "src": "opencode/commands/create_plan.md", "dest": "commands/create_plan.md" }
+          ]
+        },
+        "command/debug": {
+          "description": "Debugging investigation command",
+          "files": [
+            { "src": "opencode/commands/debug.md", "dest": "commands/debug.md" }
+          ]
+        },
+        "command/debug-k8s": {
+          "description": "Kubernetes cluster debugging command",
+          "files": [
+            { "src": "opencode/commands/debug-k8s.md", "dest": "commands/debug-k8s.md" }
+          ]
+        },
+        "command/implement_plan": {
+          "description": "Execute an approved plan command",
+          "files": [
+            { "src": "opencode/commands/implement_plan.md", "dest": "commands/implement_plan.md" }
+          ]
+        },
+        "command/init_harness": {
+          "description": "Initialize harness in a new repository command",
+          "files": [
+            { "src": "opencode/commands/init_harness.md", "dest": "commands/init_harness.md" }
+          ]
+        },
+        "command/research_codebase": {
+          "description": "Comprehensive codebase research command",
+          "files": [
+            { "src": "opencode/commands/research_codebase.md", "dest": "commands/research_codebase.md" }
+          ]
+        },
+        "command/validate_plan": {
+          "description": "Validate implementation against plan command",
+          "files": [
+            { "src": "opencode/commands/validate_plan.md", "dest": "commands/validate_plan.md" }
+          ]
+        },
+        "skill/experimental-pr-workflow": {
+          "description": "Experimental PR workflow skill",
+          "files": [
+            { "src": "opencode/skills/experimental-pr-workflow/SKILL.md", "dest": "skills/experimental-pr-workflow/SKILL.md" }
+          ]
+        },
+        "skill/git-commit-helper": {
+          "description": "Auto-triggered git commit helper skill",
+          "files": [
+            { "src": "opencode/skills/git-commit-helper/SKILL.md", "dest": "skills/git-commit-helper/SKILL.md" }
+          ]
+        },
+        "skill/init_harness": {
+          "description": "Initialize harness skill",
+          "files": [
+            { "src": "opencode/skills/init_harness/SKILL.md", "dest": "skills/init_harness/SKILL.md" }
+          ]
+        },
+        "skill/pr-description-generator": {
+          "description": "Automated PR description generator skill",
+          "files": [
+            { "src": "opencode/skills/pr-description-generator/SKILL.md", "dest": "skills/pr-description-generator/SKILL.md" }
+          ]
+        }
+      }
+    },
+    "gemini": {
+      "target": "~/.gemini",
+      "components": {
+        "agents": {
+          "description": "Specialized subagents for Gemini CLI",
+          "files": [
+            { "src": "gemini/agents/codebase_investigator.md",   "dest": "agents/codebase_investigator.md"   },
+            { "src": "gemini/agents/codebase_locator.md",        "dest": "agents/codebase_locator.md"        },
+            { "src": "gemini/agents/codebase_pattern_finder.md", "dest": "agents/codebase_pattern_finder.md" },
+            { "src": "gemini/agents/thoughts_analyzer.md",       "dest": "agents/thoughts_analyzer.md"       },
+            { "src": "gemini/agents/thoughts_locator.md",        "dest": "agents/thoughts_locator.md"        },
+            { "src": "gemini/agents/web_search_researcher.md",   "dest": "agents/web_search_researcher.md"   }
+          ]
+        },
+        "command/commit": {
+          "description": "Git commit workflow command",
+          "files": [
+            { "src": "gemini/commands/commit.toml", "dest": "commands/commit.toml" }
+          ]
+        },
+        "command/create_plan": {
+          "description": "Create implementation plans command",
+          "files": [
+            { "src": "gemini/commands/create_plan.toml", "dest": "commands/create_plan.toml" }
+          ]
+        },
+        "command/debug": {
+          "description": "Debugging investigation command",
+          "files": [
+            { "src": "gemini/commands/debug.toml", "dest": "commands/debug.toml" }
+          ]
+        },
+        "command/debug-k8s": {
+          "description": "Kubernetes cluster debugging command",
+          "files": [
+            { "src": "gemini/commands/debug-k8s.toml", "dest": "commands/debug-k8s.toml" }
+          ]
+        },
+        "command/experimental-pr-workflow": {
+          "description": "Experimental PR workflow command",
+          "files": [
+            { "src": "gemini/commands/experimental-pr-workflow.toml", "dest": "commands/experimental-pr-workflow.toml" }
+          ]
+        },
+        "command/git_commit_helper": {
+          "description": "Auto-triggered git commit helper command",
+          "files": [
+            { "src": "gemini/commands/git_commit_helper.toml", "dest": "commands/git_commit_helper.toml" }
+          ]
+        },
+        "command/implement_plan": {
+          "description": "Execute an approved plan command",
+          "files": [
+            { "src": "gemini/commands/implement_plan.toml", "dest": "commands/implement_plan.toml" }
+          ]
+        },
+        "command/init_harness": {
+          "description": "Initialize harness in a new repository command",
+          "files": [
+            { "src": "gemini/commands/init_harness.toml", "dest": "commands/init_harness.toml" }
+          ]
+        },
+        "command/pr_description_generator": {
+          "description": "Automated PR description generator command",
+          "files": [
+            { "src": "gemini/commands/pr_description_generator.toml", "dest": "commands/pr_description_generator.toml" }
+          ]
+        },
+        "command/research_codebase": {
+          "description": "Comprehensive codebase research command",
+          "files": [
+            { "src": "gemini/commands/research_codebase.toml", "dest": "commands/research_codebase.toml" }
+          ]
+        },
+        "command/validate_plan": {
+          "description": "Validate implementation against plan command",
+          "files": [
+            { "src": "gemini/commands/validate_plan.toml", "dest": "commands/validate_plan.toml" }
+          ]
+        },
+        "skill/commit": {
+          "description": "Git commit workflow skill",
+          "files": [
+            { "src": "gemini/skills/commit/SKILL.md", "dest": "skills/commit/SKILL.md" }
+          ]
+        },
+        "skill/create_plan": {
+          "description": "Create implementation plans skill",
+          "files": [
+            { "src": "gemini/skills/create_plan/SKILL.md", "dest": "skills/create_plan/SKILL.md" }
+          ]
+        },
+        "skill/debug": {
+          "description": "Debugging investigation skill",
+          "files": [
+            { "src": "gemini/skills/debug/SKILL.md", "dest": "skills/debug/SKILL.md" }
+          ]
+        },
+        "skill/debug-k8s": {
+          "description": "Kubernetes cluster debugging skill",
+          "files": [
+            { "src": "gemini/skills/debug-k8s/SKILL.md", "dest": "skills/debug-k8s/SKILL.md" }
+          ]
+        },
+        "skill/experimental_pr_workflow": {
+          "description": "Experimental PR workflow skill",
+          "files": [
+            { "src": "gemini/skills/experimental_pr_workflow/SKILL.md", "dest": "skills/experimental_pr_workflow/SKILL.md" }
+          ]
+        },
+        "skill/git_commit_helper": {
+          "description": "Auto-triggered git commit helper skill",
+          "files": [
+            { "src": "gemini/skills/git_commit_helper/SKILL.md", "dest": "skills/git_commit_helper/SKILL.md" }
+          ]
+        },
+        "skill/implement_plan": {
+          "description": "Execute an approved plan skill",
+          "files": [
+            { "src": "gemini/skills/implement_plan/SKILL.md", "dest": "skills/implement_plan/SKILL.md" }
+          ]
+        },
+        "skill/init_harness": {
+          "description": "Initialize harness skill",
+          "files": [
+            { "src": "gemini/skills/init_harness/SKILL.md", "dest": "skills/init_harness/SKILL.md" }
+          ]
+        },
+        "skill/pr_description_generator": {
+          "description": "Automated PR description generator skill",
+          "files": [
+            { "src": "gemini/skills/pr_description_generator/SKILL.md", "dest": "skills/pr_description_generator/SKILL.md" }
+          ]
+        },
+        "skill/research_codebase": {
+          "description": "Comprehensive codebase research skill",
+          "files": [
+            { "src": "gemini/skills/research_codebase/SKILL.md", "dest": "skills/research_codebase/SKILL.md" }
+          ]
+        },
+        "skill/validate_plan": {
+          "description": "Validate implementation against plan skill",
+          "files": [
+            { "src": "gemini/skills/validate_plan/SKILL.md", "dest": "skills/validate_plan/SKILL.md" }
+          ]
+        }
+      }
+    }
+  }
+}
