@@ -10,9 +10,10 @@
  * Direct run:
  *   deno run -A install.ts --tool=claude
  *
- * Private repos — set before install:
- *   export DENO_AUTH_TOKENS="$(gh auth token)@raw.githubusercontent.com"
- *   export GITHUB_TOKEN="$(gh auth token)"
+ * Private repos — clone and run:
+ *   gh repo clone <org>/ai-engineering-harness /tmp/aih -- --depth=1 -q
+ *   GITHUB_TOKEN=$(gh auth token) deno run -A /tmp/aih/install.ts --tool=claude
+ *   rm -rf /tmp/aih
  *
  * Run --help for full usage.
  */
@@ -95,11 +96,10 @@ async function loadManifest(baseUrl: string | null, token: string | null): Promi
     if (!resp.ok) {
       if ((resp.status === 403 || resp.status === 404) && !token) {
         throw new Error(
-          `Failed to fetch manifest (${resp.status}). If this is a private repository, set GITHUB_TOKEN:\n\n` +
-          `  GITHUB_TOKEN=$(gh auth token) deno run -A install.ts --tool=<tool>\n\n` +
-          `Or for remote installs, also set DENO_AUTH_TOKENS:\n\n` +
-          `  export DENO_AUTH_TOKENS="$(gh auth token)@raw.githubusercontent.com"\n` +
-          `  export GITHUB_TOKEN="$(gh auth token)"`
+          `Failed to fetch manifest (${resp.status}). If this is a private repository, clone and run locally:\n\n` +
+          `  gh repo clone <org>/ai-engineering-harness /tmp/aih -- --depth=1 -q\n` +
+          `  GITHUB_TOKEN=$(gh auth token) deno run -A /tmp/aih/install.ts --tool=<tool>\n` +
+          `  rm -rf /tmp/aih`
         );
       }
       throw new Error(`Failed to fetch manifest from ${manifestUrl}: ${resp.status} ${resp.statusText}`);
@@ -206,13 +206,13 @@ INSTALL AS CLI (recommended, one-time):
     ai-harness --tool=claude
     ai-harness --tool=all --interactive
 
-PRIVATE / ENTERPRISE REPOS:
-  export DENO_AUTH_TOKENS="$(gh auth token)@raw.githubusercontent.com"
-  export GITHUB_TOKEN="$(gh auth token)"
-  deno install -Agf -n ai-harness <raw-url>/install.ts
+PRIVATE / ENTERPRISE REPOS (clone and run):
+  gh repo clone <org>/ai-engineering-harness /tmp/aih -- --depth=1 -q
+  GITHUB_TOKEN=$(gh auth token) deno run -A /tmp/aih/install.ts --tool=claude
+  rm -rf /tmp/aih
 
-  Or set GITHUB_TOKEN for direct deno run:
-    GITHUB_TOKEN=$(gh auth token) deno run -A <url> --tool=claude
+  GITHUB_TOKEN authenticates manifest/file fetches for private content.
+  gh handles all git auth automatically.
 
 DIRECT RUN (no install step):
   deno run --allow-read --allow-write --allow-net --allow-env install.ts [options]

@@ -55,15 +55,17 @@ prompt for confirmation.
 
 ### Private & Enterprise Repos
 
-Add to `~/.zshrc` or `~/.bashrc` (one-time):
+For private or enterprise GitHub repos, clone and run locally:
 
 ```bash
-export DENO_AUTH_TOKENS="$(gh auth token)@raw.githubusercontent.com"
-export GITHUB_TOKEN="$(gh auth token)"
+gh repo clone <org>/ai-engineering-harness /tmp/aih -- --depth=1 -q \
+  && GITHUB_TOKEN=$(gh auth token) deno run -A /tmp/aih/install.ts --tool=claude \
+  && rm -rf /tmp/aih
 ```
 
-Then use the same install commands above. `DENO_AUTH_TOKENS` lets Deno fetch the
-script; `GITHUB_TOKEN` lets the installer fetch manifest and file contents.
+`gh` handles all git authentication automatically. `GITHUB_TOKEN` lets the
+installer fetch manifest and file contents from the cloned repo's remote origin
+if needed.
 
 ### Alternative: Direct Run
 
