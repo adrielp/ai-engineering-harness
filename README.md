@@ -169,6 +169,7 @@ Custom slash commands for workflows:
 - `/debug` - Investigate issues during manual testing
 - `/debug-k8s` - Debug Kubernetes clusters (prefers K8s MCP when available)
 - `/init_harness` - Initialize harness in a repository (also available as skill)
+- `/worktree` - Manage git worktrees for parallel development
 
 #### Skills
 Auto-triggered behaviors based on context:
@@ -203,6 +204,9 @@ Skills that extend Claude's capabilities (commands + auto-triggered skills):
 - `/research_codebase` - Conduct comprehensive codebase research
 - `/init_harness` - Initialize harness in a repository
 
+**Manual + Auto-Triggered Skills**:
+- `/worktree` - Manage git worktrees for parallel development (also triggers on worktree-related intent)
+
 **Auto-Triggered Skills**:
 - `git-commit-helper` - Triggers when you say "commit" or similar
 - `pr-description-generator` - Triggers when creating pull requests
@@ -231,6 +235,7 @@ Manual slash commands (TOML format):
 - `/debug` - Investigate issues
 - `/debug_k8s` - Debug Kubernetes clusters
 - `/init_harness` - Initialize harness
+- `/worktree` - Manage git worktrees for parallel development
 
 #### Skills
 Auto-triggered skills:
@@ -252,6 +257,7 @@ Quick reference of all commands/skills across tools:
 | `/debug` | ✓ | ✓ | ✓ | Investigate issues |
 | `/debug-k8s` | ✓ | ✓ | ✓ | Debug Kubernetes clusters |
 | `/research_codebase` | ✓ | ✓ | ✓ | Comprehensive codebase research |
+| `/worktree` | ✓ | ✓ | ✓ | Manage git worktrees for parallel development |
 
 **Note**: All tools now use `/init_harness` (snake_case) for consistency.
 

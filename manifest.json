@@ -87,6 +87,12 @@
           "files": [
             { "src": "claude/skills/validate_plan/SKILL.md", "dest": "skills/validate_plan/SKILL.md" }
           ]
+        },
+        "skill/worktree": {
+          "description": "Git worktree manager for parallel development",
+          "files": [
+            { "src": "claude/skills/worktree/SKILL.md", "dest": "skills/worktree/SKILL.md" }
+          ]
         }
       }
     },
@@ -180,6 +186,12 @@
           "description": "Automated PR description generator skill",
           "files": [
             { "src": "opencode/skills/pr-description-generator/SKILL.md", "dest": "skills/pr-description-generator/SKILL.md" }
+          ]
+        },
+        "command/worktree": {
+          "description": "Git worktree manager command",
+          "files": [
+            { "src": "opencode/commands/worktree.md", "dest": "commands/worktree.md" }
           ]
         }
       }
@@ -328,6 +340,18 @@
           "description": "Validate implementation against plan skill",
           "files": [
             { "src": "gemini/skills/validate_plan/SKILL.md", "dest": "skills/validate_plan/SKILL.md" }
+          ]
+        },
+        "command/worktree": {
+          "description": "Git worktree manager command",
+          "files": [
+            { "src": "gemini/commands/worktree.toml", "dest": "commands/worktree.toml" }
+          ]
+        },
+        "skill/worktree": {
+          "description": "Git worktree manager for parallel development",
+          "files": [
+            { "src": "gemini/skills/worktree/SKILL.md", "dest": "skills/worktree/SKILL.md" }
           ]
         }
       }
