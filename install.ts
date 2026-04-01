@@ -2,23 +2,19 @@
 /**
  * AI Engineering Harness Installer
  *
- * Usage (remote):
- *   deno run --allow-read --allow-write --allow-net --allow-env \
- *     https://raw.githubusercontent.com/adrielp/ai-engineering-harness/<SHA>/install.ts \
- *     --tool=claude
+ * Install as CLI (recommended):
+ *   deno install -Agf -n ai-harness \
+ *     https://raw.githubusercontent.com/adrielp/ai-engineering-harness/main/install.ts
+ *   ai-harness --tool=claude
  *
- * Usage (local):
- *   deno run --allow-read --allow-write --allow-env install.ts --tool=claude
+ * Direct run:
+ *   deno run -A install.ts --tool=claude
  *
- * Flags:
- *   --tool=<claude|opencode|gemini|all>   Which tool configs to install (required)
- *   --skill=<name>[,<name>]               One or more specific components to install
- *   --interactive, -i                     Terminal checkbox picker for component selection
- *   --dry-run, -n                         Preview changes without writing
- *   --yes, -y                             Skip confirmation prompts
- *   --mode=repo                           Print instructions for clone+stow mode instead
- *   --dest=<path>                         Clone destination for repo mode (default: ~/.ai-engineering-harness)
- *   --help, -h                            Show this help
+ * Private repos — set before install:
+ *   export DENO_AUTH_TOKENS="$(gh auth token)@raw.githubusercontent.com"
+ *   export GITHUB_TOKEN="$(gh auth token)"
+ *
+ * Run --help for full usage.
  */
 
 import { parseArgs } from "jsr:@std/cli@1/parse-args";
@@ -49,6 +45,26 @@ interface Manifest {
 }
 
 // ---------------------------------------------------------------------------
+// Auth
+// ---------------------------------------------------------------------------
+
+function resolveToken(): string | null {
+  // 1. GITHUB_TOKEN env var (CI-friendly, standard convention)
+  const envToken = Deno.env.get("GITHUB_TOKEN") ?? Deno.env.get("GH_TOKEN");
+  if (envToken) return envToken;
+  // 2. No token — unauthenticated (works for public repos)
+  return null;
+}
+
+function fetchWithAuth(url: string, token: string | null): Promise<Response> {
+  const headers: Record<string, string> = {};
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+  return fetch(url, { headers });
+}
+
+// ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
@@ -72,11 +88,20 @@ function deriveBaseUrl(): string | null {
   return url.slice(0, url.lastIndexOf("/") + 1);
 }
 
-async function loadManifest(baseUrl: string | null): Promise<Manifest> {
+async function loadManifest(baseUrl: string | null, token: string | null): Promise<Manifest> {
   if (baseUrl) {
     const manifestUrl = `${baseUrl}manifest.json`;
-    const resp = await fetch(manifestUrl);
+    const resp = await fetchWithAuth(manifestUrl, token);
     if (!resp.ok) {
+      if ((resp.status === 403 || resp.status === 404) && !token) {
+        throw new Error(
+          `Failed to fetch manifest (${resp.status}). If this is a private repository, set GITHUB_TOKEN:\n\n` +
+          `  GITHUB_TOKEN=$(gh auth token) deno run -A install.ts --tool=<tool>\n\n` +
+          `Or for remote installs, also set DENO_AUTH_TOKENS:\n\n` +
+          `  export DENO_AUTH_TOKENS="$(gh auth token)@raw.githubusercontent.com"\n` +
+          `  export GITHUB_TOKEN="$(gh auth token)"`
+        );
+      }
       throw new Error(`Failed to fetch manifest from ${manifestUrl}: ${resp.status} ${resp.statusText}`);
     }
     return resp.json() as Promise<Manifest>;
@@ -94,10 +119,15 @@ async function readFileIfExists(path: string): Promise<string | null> {
   }
 }
 
-async function fetchRemoteFile(baseUrl: string, src: string): Promise<string> {
+async function fetchRemoteFile(baseUrl: string, src: string, token: string | null): Promise<string> {
   const url = `${baseUrl}${src}`;
-  const resp = await fetch(url);
+  const resp = await fetchWithAuth(url, token);
   if (!resp.ok) {
+    if ((resp.status === 403 || resp.status === 404) && !token) {
+      throw new Error(
+        `Failed to fetch ${src} (${resp.status}). Private repo? Set GITHUB_TOKEN=$(gh auth token)`
+      );
+    }
     throw new Error(`Failed to fetch ${url}: ${resp.status} ${resp.statusText}`);
   }
   return resp.text();
@@ -168,7 +198,23 @@ function printHelp(): void {
   console.log(`
 AI Engineering Harness Installer
 
-USAGE:
+INSTALL AS CLI (recommended, one-time):
+  deno install -Agf -n ai-harness \\
+    https://raw.githubusercontent.com/adrielp/ai-engineering-harness/main/install.ts
+
+  Then run:
+    ai-harness --tool=claude
+    ai-harness --tool=all --interactive
+
+PRIVATE / ENTERPRISE REPOS:
+  export DENO_AUTH_TOKENS="$(gh auth token)@raw.githubusercontent.com"
+  export GITHUB_TOKEN="$(gh auth token)"
+  deno install -Agf -n ai-harness <raw-url>/install.ts
+
+  Or set GITHUB_TOKEN for direct deno run:
+    GITHUB_TOKEN=$(gh auth token) deno run -A <url> --tool=claude
+
+DIRECT RUN (no install step):
   deno run --allow-read --allow-write --allow-net --allow-env install.ts [options]
 
 OPTIONS:
@@ -182,26 +228,12 @@ OPTIONS:
   --help, -h                            Show this help
 
 EXAMPLES:
-  # Install all Claude Code configs
-  deno run ... install.ts --tool=claude
-
-  # Preview without writing
-  deno run ... install.ts --tool=claude --dry-run
-
-  # Install a single skill
-  deno run ... install.ts --tool=claude --skill=skill/git-commit-helper
-
-  # Install multiple components
-  deno run ... install.ts --tool=claude --skill=agents,skill/git-commit-helper
-
-  # Interactive picker
-  deno run ... install.ts --tool=claude --interactive
-
-  # Install all tools
-  deno run ... install.ts --tool=all
-
-  # Clone + stow mode (power users)
-  deno run ... install.ts --mode=repo --dest=~/.ai-engineering-harness
+  ai-harness --tool=claude                        # Install Claude Code configs
+  ai-harness --tool=claude --dry-run              # Preview changes
+  ai-harness --tool=claude --skill=agents         # Install only agents
+  ai-harness --tool=claude --interactive          # Pick components
+  ai-harness --tool=all                           # Install all tools
+  ai-harness --mode=repo                          # Clone + stow instructions
 `.trim());
 }
 
@@ -268,6 +300,7 @@ interface InstallOptions {
   dryRun: boolean;
   yes: boolean;
   baseUrl: string | null;
+  token: string | null;
 }
 
 async function installTool(manifest: Manifest, toolName: string, opts: InstallOptions): Promise<void> {
@@ -338,7 +371,7 @@ async function installTool(manifest: Manifest, toolName: string, opts: InstallOp
       // Get source content
       let srcContent: string;
       if (opts.baseUrl) {
-        srcContent = await fetchRemoteFile(opts.baseUrl, fileEntry.src);
+        srcContent = await fetchRemoteFile(opts.baseUrl, fileEntry.src, opts.token);
       } else {
         srcContent = await Deno.readTextFile(fileEntry.src);
       }
@@ -423,7 +456,8 @@ if (!args.tool) {
 }
 
 const baseUrl = deriveBaseUrl();
-const manifest = await loadManifest(baseUrl);
+const token = resolveToken();
+const manifest = await loadManifest(baseUrl, token);
 
 const skillFilter: string[] = args.skill
   ? String(args.skill).split(",").map((s: string) => s.trim()).filter(Boolean)
@@ -436,6 +470,7 @@ const installOpts: InstallOptions = {
   dryRun: Boolean(args["dry-run"]),
   yes: Boolean(args.yes),
   baseUrl,
+  token,
 };
 
 const toolArg = String(args.tool);
