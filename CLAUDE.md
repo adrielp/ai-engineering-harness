@@ -74,7 +74,18 @@ Ticket → /create_plan → /implement_plan → /validate_plan → /commit
 | `debug` | `/debug` | Investigate issues |
 | `debug-k8s` | `/debug-k8s` | Debug Kubernetes clusters (prefers K8s MCP) |
 
-Auto-triggered: `git-commit-helper`, `pr-description-generator`, `experimental-pr-workflow`
+Auto-triggered: `git-commit-helper`, `pr-description-generator`, `experimental-pr-workflow`, `otel_instrument`
+
+### OpenTelemetry Skills
+
+The `otel_instrument` orchestrator auto-activates on observability/telemetry requests and routes to:
+
+| Skill | Scope |
+|-------|-------|
+| `otel_instrumentation` | SDK setup, traces, metrics, logs (Node.js, Go, Python, Java, .NET, Ruby) |
+| `otel_collector` | Collector YAML — receivers, processors, exporters, pipelines, sampling |
+| `otel_semantic_conventions` | Attribute naming, placement, legacy→current migration |
+| `otel_ottl` | OTTL expressions for Collector transforms, redaction, filtering |
 
 ## MCP Configuration
 

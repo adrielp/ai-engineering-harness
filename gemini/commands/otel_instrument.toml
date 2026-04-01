@@ -1,0 +1,2 @@
+description = "OpenTelemetry Instrumentation Orchestrator"
+prompt = "Activate the `otel_instrument` skill."

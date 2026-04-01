@@ -170,6 +170,7 @@ Custom slash commands for workflows:
 - `/debug-k8s` - Debug Kubernetes clusters (prefers K8s MCP when available)
 - `/init_harness` - Initialize harness in a repository (also available as skill)
 - `/worktree` - Manage git worktrees for parallel development
+- `/otel_instrument` - OpenTelemetry instrumentation orchestrator
 
 #### Skills
 Auto-triggered behaviors based on context:
@@ -177,6 +178,11 @@ Auto-triggered behaviors based on context:
 - `git-commit-helper` - Creates well-structured commits when you say "commit these changes"
 - `pr-description-generator` - Generates comprehensive PR descriptions following templates
 - `experimental-pr-workflow` - Formalizes experimental work into proper tickets and PRs
+- `otel_instrument` - OpenTelemetry orchestrator — routes to sub-skills for instrumentation, Collector config, semantic conventions, and OTTL transforms
+- `otel_instrumentation` - SDK setup, traces, metrics, logs (Node.js, Go, Python, Java, .NET, Ruby)
+- `otel_collector` - Collector YAML configuration (receivers, processors, exporters, pipelines, sampling)
+- `otel_semantic_conventions` - Attribute naming, placement, and legacy→current migration
+- `otel_ottl` - OTTL expressions for Collector transforms, redaction, filtering
 
 ### For Claude Code
 
@@ -211,6 +217,13 @@ Skills that extend Claude's capabilities (commands + auto-triggered skills):
 - `git-commit-helper` - Triggers when you say "commit" or similar
 - `pr-description-generator` - Triggers when creating pull requests
 - `experimental-pr-workflow` - Formalizes experimental work
+- `otel_instrument` - OpenTelemetry orchestrator — routes to sub-skills based on task context
+
+**OpenTelemetry Sub-Skills** (invoked via orchestrator):
+- `otel_instrumentation` - SDK setup, traces, metrics, logs (Node.js, Go, Python, Java, .NET, Ruby)
+- `otel_collector` - Collector YAML configuration (receivers, processors, exporters, pipelines, sampling)
+- `otel_semantic_conventions` - Attribute naming, placement, and legacy→current migration
+- `otel_ottl` - OTTL expressions for Collector transforms, redaction, filtering
 
 ### For Gemini CLI
 
@@ -236,12 +249,18 @@ Manual slash commands (TOML format):
 - `/debug_k8s` - Debug Kubernetes clusters
 - `/init_harness` - Initialize harness
 - `/worktree` - Manage git worktrees for parallel development
+- `/otel_instrument` - OpenTelemetry instrumentation orchestrator
 
 #### Skills
 Auto-triggered skills:
 - `git_commit_helper` - Triggers when committing changes
 - `pr_description_generator` - Triggers when creating PRs
 - `experimental_pr_workflow` - Formalizes experimental work
+- `otel_instrument` - OpenTelemetry orchestrator — routes to sub-skills for instrumentation, Collector config, semantic conventions, and OTTL transforms
+- `otel_instrumentation` - SDK setup, traces, metrics, logs (Node.js, Go, Python, Java, .NET, Ruby)
+- `otel_collector` - Collector YAML configuration (receivers, processors, exporters, pipelines, sampling)
+- `otel_semantic_conventions` - Attribute naming, placement, and legacy→current migration
+- `otel_ottl` - OTTL expressions for Collector transforms, redaction, filtering
 
 ### Command Reference
 
@@ -258,6 +277,7 @@ Quick reference of all commands/skills across tools:
 | `/debug-k8s` | ✓ | ✓ | ✓ | Debug Kubernetes clusters |
 | `/research_codebase` | ✓ | ✓ | ✓ | Comprehensive codebase research |
 | `/worktree` | ✓ | ✓ | ✓ | Manage git worktrees for parallel development |
+| `otel_instrument` | ✓ | ✓ | ✓ | OpenTelemetry orchestrator (auto-triggered) |
 
 **Note**: All tools now use `/init_harness` (snake_case) for consistency.
 
