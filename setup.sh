@@ -48,6 +48,9 @@ get_target_dir() {
         gemini)
             echo "$HOME/.gemini"
             ;;
+        pi)
+            echo "$HOME/.pi/agent"
+            ;;
         *)
             echo ""
             ;;
@@ -63,6 +66,7 @@ Tools:
   opencode    Install OpenCode configuration
   claude      Install Claude Code configuration
   gemini      Install Gemini CLI configuration
+  pi          Install Pi configuration
   all         Install all configurations
 
 Options:
@@ -75,6 +79,7 @@ Examples:
   ./setup.sh opencode              # Install OpenCode
   ./setup.sh claude --dry-run      # Preview Claude Code installation
   ./setup.sh gemini                # Install Gemini CLI
+  ./setup.sh pi                    # Install Pi
   ./setup.sh all --restow          # Update all configurations
   ./setup.sh opencode --delete     # Remove OpenCode symlinks
 EOF
@@ -244,7 +249,7 @@ main() {
                 print_usage
                 exit 0
                 ;;
-            opencode|claude|gemini|all)
+            opencode|claude|gemini|pi|all)
                 tool="$1"
                 shift
                 ;;
@@ -284,7 +289,7 @@ main() {
     if [[ "$tool" == "all" ]]; then
         log_info "Installing all tools..."
         echo ""
-        for t in opencode claude gemini; do
+        for t in opencode claude gemini pi; do
             process_tool "$t" "$action" "$restow" "$dry_run"
             echo ""
         done
@@ -301,7 +306,7 @@ main() {
     if [[ "$action" == "stow" ]]; then
         echo "Your AI harness configuration is now linked:"
         if [[ "$tool" == "all" ]]; then
-            for t in opencode claude gemini; do
+            for t in opencode claude gemini pi; do
                 local target=$(get_target_dir "$t")
                 echo "  $target/ -> $STOW_DIR/$t/"
             done

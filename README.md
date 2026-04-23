@@ -7,6 +7,7 @@ A harness for AI coding agents that provides context engineering patterns, comma
 - **Claude Code** (code.claude.com) — Supported
 - **OpenCode** (opencode.ai) — Supported
 - **Gemini CLI** (ai.google.dev/gemini-cli) — Supported
+- **Pi** (github.com/nicholasgasior/pi-coding-agent) — Supported
 
 ## Quick Start
 
@@ -37,7 +38,8 @@ Then install configs:
 ai-harness --tool=claude          # Claude Code
 ai-harness --tool=opencode        # OpenCode
 ai-harness --tool=gemini          # Gemini CLI
-ai-harness --tool=all             # All three
+ai-harness --tool=pi              # Pi
+ai-harness --tool=all             # All four
 ```
 
 More options:
@@ -92,7 +94,8 @@ cd ai-engineering-harness
 ./setup.sh claude             # Install Claude Code → ~/.claude/
 ./setup.sh opencode           # Install OpenCode → ~/.config/opencode/
 ./setup.sh gemini             # Install Gemini CLI → ~/.gemini/
-./setup.sh all                # Install all three
+./setup.sh pi                 # Install Pi → ~/.pi/agent/
+./setup.sh all                # Install all four
 
 # Useful flags
 ./setup.sh <tool> --dry-run   # Preview changes
@@ -117,7 +120,7 @@ Specialized sub-agents shared across Claude Code, OpenCode, and Gemini CLI:
 
 ### Commands & Skills
 
-All commands work identically across tools. OpenCode uses `commands/` + `skills/`, Claude Code uses `skills/` (commands have `disable-model-invocation: true`), Gemini CLI uses TOML format.
+All commands work identically across tools. OpenCode uses `commands/` + `skills/`, Claude Code uses `skills/` (commands have `disable-model-invocation: true`), Gemini CLI uses TOML format, and Pi uses `prompts/` (prompt templates) + `skills/`.
 
 | Command | Type | Purpose |
 |---------|------|---------|
@@ -175,7 +178,7 @@ After installing the harness, initialize any project (commands are the same acro
 
 ```bash
 cd your-project
-claude  # or: opencode, gemini
+claude  # or: opencode, gemini, pi
 
 /init_harness
 ```
@@ -214,13 +217,14 @@ description: What this agent does and when to use it.
 [Agent system prompt here]
 ```
 
-Works for all three tools — Claude Code calls them "subagents", OpenCode and Gemini CLI call them "agents".
+Works for all four tools — Claude Code calls them "subagents", OpenCode and Gemini CLI call them "agents", and Pi calls them "agents" (kebab-case).
 
 ### Adding Commands & Skills
 
 - **OpenCode**: Add `.md` files in `opencode/commands/` or `opencode/skills/<name>/SKILL.md`
 - **Claude Code**: Add `claude/skills/<name>/SKILL.md` (set `disable-model-invocation: true` for manual-only)
 - **Gemini CLI**: Add `.toml` files in `gemini/commands/` or `gemini/skills/<name>/SKILL.md`
+- **Pi**: Add `.md` files in `pi/prompts/` (commands) or `pi/skills/<name>/SKILL.md` (skills)
 
 ### Personal Thoughts Directory
 

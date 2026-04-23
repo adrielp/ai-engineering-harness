@@ -93,6 +93,18 @@
           "files": [
             { "src": "claude/skills/worktree/SKILL.md", "dest": "skills/worktree/SKILL.md" }
           ]
+        },
+        "skill/github-tracker": {
+          "description": "GitHub activity tracker and PR/issue query skill",
+          "files": [
+            { "src": "claude/skills/github-tracker/SKILL.md", "dest": "skills/github-tracker/SKILL.md" }
+          ]
+        },
+        "skill/todoist-task-manager": {
+          "description": "Todoist task management via MCP skill",
+          "files": [
+            { "src": "claude/skills/todoist-task-manager/SKILL.md", "dest": "skills/todoist-task-manager/SKILL.md" }
+          ]
         }
       }
     },
@@ -352,6 +364,186 @@
           "description": "Git worktree manager for parallel development",
           "files": [
             { "src": "gemini/skills/worktree/SKILL.md", "dest": "skills/worktree/SKILL.md" }
+          ]
+        }
+      }
+    },
+    "pi": {
+      "target": "~/.pi/agent",
+      "components": {
+        "agents": {
+          "description": "Specialized subagents for Pi",
+          "files": [
+            { "src": "pi/agents/codebase-analyzer.md",      "dest": "agents/codebase-analyzer.md"      },
+            { "src": "pi/agents/codebase-locator.md",       "dest": "agents/codebase-locator.md"       },
+            { "src": "pi/agents/codebase-pattern-finder.md","dest": "agents/codebase-pattern-finder.md" },
+            { "src": "pi/agents/thoughts-analyzer.md",      "dest": "agents/thoughts-analyzer.md"      },
+            { "src": "pi/agents/thoughts-locator.md",       "dest": "agents/thoughts-locator.md"       },
+            { "src": "pi/agents/web-search-researcher.md",  "dest": "agents/web-search-researcher.md"  }
+          ]
+        },
+        "extension/subagent": {
+          "description": "Subagent tool for multi-agent workflows (single, parallel, chain)",
+          "files": [
+            { "src": "pi/extensions/subagent/index.ts",                    "dest": "extensions/subagent/index.ts"                    },
+            { "src": "pi/extensions/subagent/agents.ts",                   "dest": "extensions/subagent/agents.ts"                   },
+            { "src": "pi/extensions/subagent/agents/planner.md",           "dest": "extensions/subagent/agents/planner.md"           },
+            { "src": "pi/extensions/subagent/agents/reviewer.md",          "dest": "extensions/subagent/agents/reviewer.md"          },
+            { "src": "pi/extensions/subagent/agents/scout.md",             "dest": "extensions/subagent/agents/scout.md"             },
+            { "src": "pi/extensions/subagent/agents/worker.md",            "dest": "extensions/subagent/agents/worker.md"            },
+            { "src": "pi/extensions/subagent/prompts/implement.md",        "dest": "extensions/subagent/prompts/implement.md"        },
+            { "src": "pi/extensions/subagent/prompts/implement-and-review.md", "dest": "extensions/subagent/prompts/implement-and-review.md" },
+            { "src": "pi/extensions/subagent/prompts/scout-and-plan.md",   "dest": "extensions/subagent/prompts/scout-and-plan.md"   }
+          ]
+        },
+        "prompt/commit": {
+          "description": "Git commit workflow prompt",
+          "files": [
+            { "src": "pi/prompts/commit.md", "dest": "prompts/commit.md" }
+          ]
+        },
+        "prompt/create_plan": {
+          "description": "Create implementation plans prompt",
+          "files": [
+            { "src": "pi/prompts/create_plan.md", "dest": "prompts/create_plan.md" }
+          ]
+        },
+        "prompt/debug": {
+          "description": "Debugging investigation prompt",
+          "files": [
+            { "src": "pi/prompts/debug.md", "dest": "prompts/debug.md" }
+          ]
+        },
+        "prompt/debug-k8s": {
+          "description": "Kubernetes cluster debugging prompt",
+          "files": [
+            { "src": "pi/prompts/debug-k8s.md", "dest": "prompts/debug-k8s.md" }
+          ]
+        },
+        "prompt/implement_plan": {
+          "description": "Execute an approved plan prompt",
+          "files": [
+            { "src": "pi/prompts/implement_plan.md", "dest": "prompts/implement_plan.md" }
+          ]
+        },
+        "prompt/init_harness": {
+          "description": "Initialize harness in a new repository prompt",
+          "files": [
+            { "src": "pi/prompts/init_harness.md", "dest": "prompts/init_harness.md" }
+          ]
+        },
+        "prompt/otel_instrument": {
+          "description": "OpenTelemetry instrumentation orchestrator prompt",
+          "files": [
+            { "src": "pi/prompts/otel_instrument.md", "dest": "prompts/otel_instrument.md" }
+          ]
+        },
+        "prompt/research_codebase": {
+          "description": "Comprehensive codebase research prompt",
+          "files": [
+            { "src": "pi/prompts/research_codebase.md", "dest": "prompts/research_codebase.md" }
+          ]
+        },
+        "prompt/validate_plan": {
+          "description": "Validate implementation against plan prompt",
+          "files": [
+            { "src": "pi/prompts/validate_plan.md", "dest": "prompts/validate_plan.md" }
+          ]
+        },
+        "prompt/worktree": {
+          "description": "Git worktree manager prompt",
+          "files": [
+            { "src": "pi/prompts/worktree.md", "dest": "prompts/worktree.md" }
+          ]
+        },
+        "skill/codebase-analyzer": {
+          "description": "Codebase implementation analysis skill",
+          "files": [
+            { "src": "pi/skills/codebase-analyzer/SKILL.md", "dest": "skills/codebase-analyzer/SKILL.md" }
+          ]
+        },
+        "skill/codebase-locator": {
+          "description": "File and component locator skill",
+          "files": [
+            { "src": "pi/skills/codebase-locator/SKILL.md", "dest": "skills/codebase-locator/SKILL.md" }
+          ]
+        },
+        "skill/codebase-pattern-finder": {
+          "description": "Pattern and implementation discovery skill",
+          "files": [
+            { "src": "pi/skills/codebase-pattern-finder/SKILL.md", "dest": "skills/codebase-pattern-finder/SKILL.md" }
+          ]
+        },
+        "skill/experimental-pr-workflow": {
+          "description": "Experimental PR workflow skill",
+          "files": [
+            { "src": "pi/skills/experimental-pr-workflow/SKILL.md", "dest": "skills/experimental-pr-workflow/SKILL.md" }
+          ]
+        },
+        "skill/git-commit-helper": {
+          "description": "Auto-triggered git commit helper skill",
+          "files": [
+            { "src": "pi/skills/git-commit-helper/SKILL.md", "dest": "skills/git-commit-helper/SKILL.md" }
+          ]
+        },
+        "skill/init-harness": {
+          "description": "Initialize harness skill",
+          "files": [
+            { "src": "pi/skills/init-harness/SKILL.md", "dest": "skills/init-harness/SKILL.md" }
+          ]
+        },
+        "skill/otel-collector": {
+          "description": "OpenTelemetry Collector configuration skill",
+          "files": [
+            { "src": "pi/skills/otel-collector/SKILL.md", "dest": "skills/otel-collector/SKILL.md" }
+          ]
+        },
+        "skill/otel-instrument": {
+          "description": "OpenTelemetry instrumentation orchestrator skill",
+          "files": [
+            { "src": "pi/skills/otel-instrument/SKILL.md", "dest": "skills/otel-instrument/SKILL.md" }
+          ]
+        },
+        "skill/otel-instrumentation": {
+          "description": "OpenTelemetry SDK instrumentation skill",
+          "files": [
+            { "src": "pi/skills/otel-instrumentation/SKILL.md", "dest": "skills/otel-instrumentation/SKILL.md" }
+          ]
+        },
+        "skill/otel-ottl": {
+          "description": "OpenTelemetry OTTL expressions skill",
+          "files": [
+            { "src": "pi/skills/otel-ottl/SKILL.md", "dest": "skills/otel-ottl/SKILL.md" }
+          ]
+        },
+        "skill/otel-semantic-conventions": {
+          "description": "OpenTelemetry semantic conventions skill",
+          "files": [
+            { "src": "pi/skills/otel-semantic-conventions/SKILL.md", "dest": "skills/otel-semantic-conventions/SKILL.md" }
+          ]
+        },
+        "skill/pr-description-generator": {
+          "description": "Automated PR description generator skill",
+          "files": [
+            { "src": "pi/skills/pr-description-generator/SKILL.md", "dest": "skills/pr-description-generator/SKILL.md" }
+          ]
+        },
+        "skill/thoughts-analyzer": {
+          "description": "Research document analysis skill",
+          "files": [
+            { "src": "pi/skills/thoughts-analyzer/SKILL.md", "dest": "skills/thoughts-analyzer/SKILL.md" }
+          ]
+        },
+        "skill/thoughts-locator": {
+          "description": "Thoughts directory document discovery skill",
+          "files": [
+            { "src": "pi/skills/thoughts-locator/SKILL.md", "dest": "skills/thoughts-locator/SKILL.md" }
+          ]
+        },
+        "skill/web-search-researcher": {
+          "description": "Web research skill",
+          "files": [
+            { "src": "pi/skills/web-search-researcher/SKILL.md", "dest": "skills/web-search-researcher/SKILL.md" }
           ]
         }
       }

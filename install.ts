@@ -218,7 +218,7 @@ DIRECT RUN (no install step):
   deno run --allow-read --allow-write --allow-net --allow-env install.ts [options]
 
 OPTIONS:
-  --tool=<claude|opencode|gemini|all>   Which tool configs to install (required)
+  --tool=<claude|opencode|gemini|pi|all> Which tool configs to install (required)
   --skill=<name>[,<name>]               Specific component names to install
   --interactive, -i                     Interactive checkbox picker
   --dry-run, -n                         Preview without writing files
@@ -259,7 +259,8 @@ The repo must remain at a stable path on your system.
        ./setup.sh claude             # Claude Code
        ./setup.sh opencode           # OpenCode
        ./setup.sh gemini             # Gemini CLI
-       ./setup.sh all                # All three
+       ./setup.sh pi                 # Pi
+       ./setup.sh all                # All four
 
   4. Update after pulling changes:
        ./setup.sh all --restow
