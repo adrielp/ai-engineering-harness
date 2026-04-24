@@ -382,6 +382,12 @@
             { "src": "pi/agents/web-search-researcher.md",  "dest": "agents/web-search-researcher.md"  }
           ]
         },
+        "extension/open-editor": {
+          "description": "Open files from cwd in $VISUAL/$EDITOR via /edit or ctrl+e",
+          "files": [
+            { "src": "pi/extensions/open-editor.ts", "dest": "extensions/open-editor.ts" }
+          ]
+        },
         "extension/subagent": {
           "description": "Subagent tool for multi-agent workflows (single, parallel, chain)",
           "files": [
