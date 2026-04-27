@@ -31,6 +31,7 @@ Match the user's intent to exactly one sub-skill. Use the **first match**:
 
 | If the request involves… | Route to |
 |---|---|
+| Local instrumentation feedback loop, "drive with observability", trace-as-design-artifact, narrative-first, ODD | `observability_driven_development` |
 | Collector YAML, receivers, processors, exporters, pipelines, deployment, sampling policies | `otel_collector` |
 | OTTL expressions, transform processor, filter expressions, Collector-side redaction/normalization | `otel_ottl` |
 | Attribute naming, placement rules, legacy→current migration, semantic convention lookup | `otel_semantic_conventions` |
@@ -45,6 +46,7 @@ Some tasks span skills. Execute in this order:
 
 | Compound Task | Sequence |
 |---|---|
+| ODD on a new feature | `observability_driven_development` (write narrative) → `otel_instrumentation` (instrument) → `observability_driven_development` (validate) |
 | Full observability setup | `otel_instrumentation` → `otel_collector` → `otel_ottl` (if sensitive data) |
 | Instrument + sampling | `otel_instrumentation` → `otel_collector` |
 | Fix naming + add redaction | `otel_semantic_conventions` → `otel_ottl` |

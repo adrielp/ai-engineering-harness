@@ -60,6 +60,13 @@ When the user's requirements are vague or you need to walk down decision branche
 - Multiple architectural choices need to be resolved
 - The user explicitly asks to "stress-test" or "drill into" the plan
 
+### Telemetry-bearing features
+
+When the plan touches a request lifecycle, an AI agent/MCP, or any work where the trace is the spec, delegate to the `observability-driven-development` skill. The plan should include:
+
+- A reference to the narrative spec at `thoughts/shared/telemetry/<feature>.md` (to be written before implementation).
+- A `/validate_telemetry` step in Phase verification, parallel to `/validate_plan`.
+
 ### Step 3: Plan Structure Development
 
 Present a high-level structure for approval before detailed writing.

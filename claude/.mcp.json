@@ -4,6 +4,11 @@
       "command": "npx",
       "args": ["-y", "kubernetes-mcp-server@latest"],
       "disabled": true
+    },
+    "aspire-dashboard": {
+      "type": "http",
+      "url": "http://localhost:18891",
+      "disabled": true
     }
   }
 }

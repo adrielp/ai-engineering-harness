@@ -88,6 +88,21 @@
             { "src": "claude/skills/validate_plan/SKILL.md", "dest": "skills/validate_plan/SKILL.md" }
           ]
         },
+        "skill/validate_telemetry": {
+          "description": "Validate local telemetry against a narrative spec skill",
+          "files": [
+            { "src": "claude/skills/validate_telemetry/SKILL.md", "dest": "skills/validate_telemetry/SKILL.md" }
+          ]
+        },
+        "skill/observability-driven-development": {
+          "description": "Observability Driven Development (ODD) — design the trace before the feature; local OTel feedback loop",
+          "files": [
+            { "src": "claude/skills/observability-driven-development/SKILL.md",        "dest": "skills/observability-driven-development/SKILL.md"        },
+            { "src": "claude/skills/observability-driven-development/narrative.md",    "dest": "skills/observability-driven-development/narrative.md"    },
+            { "src": "claude/skills/observability-driven-development/loop.md",         "dest": "skills/observability-driven-development/loop.md"         },
+            { "src": "claude/skills/observability-driven-development/local-setup.md",  "dest": "skills/observability-driven-development/local-setup.md"  }
+          ]
+        },
         "skill/worktree": {
           "description": "Git worktree manager for parallel development",
           "files": [
@@ -210,6 +225,21 @@
           "description": "Validate implementation against plan command",
           "files": [
             { "src": "opencode/commands/validate_plan.md", "dest": "commands/validate_plan.md" }
+          ]
+        },
+        "command/validate_telemetry": {
+          "description": "Validate local telemetry against a narrative spec command",
+          "files": [
+            { "src": "opencode/commands/validate_telemetry.md", "dest": "commands/validate_telemetry.md" }
+          ]
+        },
+        "skill/observability-driven-development": {
+          "description": "Observability Driven Development (ODD) — design the trace before the feature; local OTel feedback loop",
+          "files": [
+            { "src": "opencode/skills/observability-driven-development/SKILL.md",        "dest": "skills/observability-driven-development/SKILL.md"        },
+            { "src": "opencode/skills/observability-driven-development/narrative.md",    "dest": "skills/observability-driven-development/narrative.md"    },
+            { "src": "opencode/skills/observability-driven-development/loop.md",         "dest": "skills/observability-driven-development/loop.md"         },
+            { "src": "opencode/skills/observability-driven-development/local-setup.md",  "dest": "skills/observability-driven-development/local-setup.md"  }
           ]
         },
         "skill/experimental-pr-workflow": {
@@ -358,6 +388,21 @@
           "description": "Validate implementation against plan command",
           "files": [
             { "src": "gemini/commands/validate_plan.toml", "dest": "commands/validate_plan.toml" }
+          ]
+        },
+        "command/validate_telemetry": {
+          "description": "Validate local telemetry against a narrative spec command",
+          "files": [
+            { "src": "gemini/commands/validate_telemetry.toml", "dest": "commands/validate_telemetry.toml" }
+          ]
+        },
+        "skill/observability_driven_development": {
+          "description": "Observability Driven Development (ODD) — design the trace before the feature; local OTel feedback loop",
+          "files": [
+            { "src": "gemini/skills/observability_driven_development/SKILL.md",        "dest": "skills/observability_driven_development/SKILL.md"        },
+            { "src": "gemini/skills/observability_driven_development/narrative.md",    "dest": "skills/observability_driven_development/narrative.md"    },
+            { "src": "gemini/skills/observability_driven_development/loop.md",         "dest": "skills/observability_driven_development/loop.md"         },
+            { "src": "gemini/skills/observability_driven_development/local-setup.md",  "dest": "skills/observability_driven_development/local-setup.md"  }
           ]
         },
         "skill/commit": {
@@ -568,6 +613,21 @@
           "description": "Validate implementation against plan prompt",
           "files": [
             { "src": "pi/prompts/validate_plan.md", "dest": "prompts/validate_plan.md" }
+          ]
+        },
+        "prompt/validate_telemetry": {
+          "description": "Validate local telemetry against a narrative spec prompt",
+          "files": [
+            { "src": "pi/prompts/validate_telemetry.md", "dest": "prompts/validate_telemetry.md" }
+          ]
+        },
+        "skill/observability-driven-development": {
+          "description": "Observability Driven Development (ODD) — design the trace before the feature; local OTel feedback loop",
+          "files": [
+            { "src": "pi/skills/observability-driven-development/SKILL.md",        "dest": "skills/observability-driven-development/SKILL.md"        },
+            { "src": "pi/skills/observability-driven-development/narrative.md",    "dest": "skills/observability-driven-development/narrative.md"    },
+            { "src": "pi/skills/observability-driven-development/loop.md",         "dest": "skills/observability-driven-development/loop.md"         },
+            { "src": "pi/skills/observability-driven-development/local-setup.md",  "dest": "skills/observability-driven-development/local-setup.md"  }
           ]
         },
         "prompt/worktree": {

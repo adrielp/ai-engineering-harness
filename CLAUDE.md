@@ -54,14 +54,15 @@ thoughts/
 The harness implements a structured development workflow:
 
 ```
-Ticket → /create_plan → /implement_plan → /validate_plan → /commit
+Ticket → /create_plan → /implement_plan → /validate_plan → [/validate_telemetry] → /commit
 ```
 
 1. Create tickets in `thoughts/shared/tickets/` using the template
 2. Generate plans with `/create_plan <ticket-path>`
 3. Execute with `/implement_plan <plan-path>`
 4. Verify with `/validate_plan`
-5. Commit with `/commit`
+5. (Optional, for telemetry-bearing features) Verify the trace narrative with `/validate_telemetry [<spec-path>]`
+6. Commit with `/commit`
 
 ## Key Skills (Claude Code)
 
@@ -75,8 +76,9 @@ Ticket → /create_plan → /implement_plan → /validate_plan → /commit
 | `commit` | `/commit` | Create structured git commit |
 | `debug` | `/debug` | Investigate issues |
 | `debug-k8s` | `/debug-k8s` | Debug Kubernetes clusters (prefers K8s MCP) |
+| `validate_telemetry` | `/validate_telemetry` | Validate local telemetry against a narrative spec |
 
-Auto-triggered: `git-commit-helper`, `pr-description-generator`, `experimental-pr-workflow`, `otel_instrument`
+Auto-triggered: `git-commit-helper`, `pr-description-generator`, `experimental-pr-workflow`, `otel_instrument`, `observability_driven_development`
 
 ### OpenTelemetry Skills
 
@@ -84,6 +86,7 @@ The `otel_instrument` orchestrator auto-activates on observability/telemetry req
 
 | Skill | Scope |
 |-------|-------|
+| `observability_driven_development` | The ODD inner loop, narrative specs, local Aspire setup, `/validate_telemetry` |
 | `otel_instrumentation` | SDK setup, traces, metrics, logs (Node.js, Go, Python, Java, .NET, Ruby) |
 | `otel_collector` | Collector YAML — receivers, processors, exporters, pipelines, sampling |
 | `otel_semantic_conventions` | Attribute naming, placement, legacy→current migration |

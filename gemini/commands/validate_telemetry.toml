@@ -1,0 +1,7 @@
+description = "Validate Telemetry"
+prompt = """
+Activate the observability_driven_development skill and run its Validation
+workflow. Argument: $ARGUMENTS. If $ARGUMENTS resolves to an existing file
+under thoughts/shared/telemetry/, use spec-driven mode; otherwise run the
+generic health check.
+"""

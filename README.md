@@ -132,6 +132,7 @@ All commands work identically across tools. OpenCode uses `commands/` + `skills/
 | `/debug` | manual | Investigate issues during testing |
 | `/debug-k8s` | manual | Debug Kubernetes clusters (prefers K8s MCP) |
 | `/research_codebase` | manual | Comprehensive codebase research |
+| `/validate_telemetry` | manual | Validate local telemetry against a narrative spec |
 | `/worktree` | manual + auto | Manage git worktrees for parallel development |
 | `git-commit-helper` | auto | Triggers on "commit these changes" |
 | `pr-description-generator` | auto | Triggers when creating PRs |
@@ -148,6 +149,7 @@ The `otel_instrument` orchestrator auto-activates on observability/telemetry req
 
 | Skill | Scope |
 |-------|-------|
+| `observability_driven_development` | The ODD inner loop, narrative specs, local Aspire setup, `/validate_telemetry` |
 | `otel_instrumentation` | SDK setup, traces, metrics, logs (Node.js, Go, Python, Java, .NET, Ruby) |
 | `otel_collector` | Collector YAML — receivers, processors, exporters, pipelines, sampling |
 | `otel_semantic_conventions` | Attribute naming, placement, legacy-to-current migration |

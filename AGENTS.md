@@ -16,22 +16,22 @@
 ai-engineering-harness/
 ├── opencode/           → ~/.config/opencode/
 │   ├── agents/         # 6 agents (snake_case)
-│   ├── commands/       # 8 slash commands
-│   ├── skills/         # 14 skills (auto-triggered)
+│   ├── commands/       # 11 slash commands
+│   ├── skills/         # 15 skills (auto-triggered)
 │   └── opencode.json   # MCP configuration
 ├── claude/             → ~/.claude/
 │   ├── agents/         # 6 agents (snake_case)
-│   ├── skills/         # 24 skills (8 manual + 16 auto)
+│   ├── skills/         # 26 skills (13 manual + 13 auto)
 │   ├── .mcp.json       # MCP configuration
 │   └── settings.json   # Settings schema
 ├── gemini/             → ~/.gemini/
 │   ├── agents/         # 6 agents (snake_case)
-│   ├── commands/       # 11 commands (TOML format)
-│   └── skills/         # 22 skills (8 manual + 14 auto)
+│   ├── commands/       # 14 commands (TOML format)
+│   └── skills/         # 23 skills (auto-triggered)
 ├── pi/                 → ~/.pi/agent/
 │   ├── agents/         # 6 agents (kebab-case)
-│   ├── prompts/        # 10 prompt templates (Pi's commands)
-│   ├── skills/         # 20 skills (auto-triggered)
+│   ├── prompts/        # 11 prompt templates (Pi's commands)
+│   ├── skills/         # 21 skills (auto-triggered)
 │   └── extensions/     # subagent extension (multi-agent workflows)
 └── thoughts/           # Context engineering artifacts
     ├── shared/tickets/ # Work items
@@ -52,6 +52,8 @@ ai-engineering-harness/
 | `/debug` | ✓ | ✓ | ✓ | ✓ | Manual | Investigate issues during testing |
 | `/debug_k8s` | ✓ | ✓ | ✓ | ✓ | Manual | Debug Kubernetes (prefers MCP, falls back to kubectl) |
 | `/research_codebase` | ✓ | ✓ | ✓ | ✓ | Manual | Comprehensive codebase research |
+| `/validate_telemetry` | ✓ | ✓ | ✓ | ✓ | Manual | Validate local telemetry against a narrative spec |
+| `observability_driven_development` | ✓ | ✓ | ✓ | ✓ | Auto | Design the trace before the feature; local OTel feedback loop |
 | `git_commit_helper` | ✓ | ✓ | ✓ | ✓ | Auto | Triggers on "commit" keywords |
 | `pr_description_generator` | ✓ | ✓ | ✓ | ✓ | Auto | Triggers when creating PRs |
 | `experimental_pr_workflow` | ✓ | ✓ | ✓ | ✓ | Auto | Formalizes experimental work |
@@ -79,14 +81,15 @@ All agents are shared across all four tools:
 ## Workflow
 
 ```
-Ticket → /create_plan → /implement_plan → /validate_plan → /commit
+Ticket → /create_plan → /implement_plan → /validate_plan → [/validate_telemetry] → /commit
 ```
 
 1. Create ticket in `thoughts/shared/tickets/` (use ticket-template.md)
 2. Run `/create_plan <ticket-path>` to generate plan
 3. Run `/implement_plan <plan-path>` to execute
 4. Run `/validate_plan` to verify
-5. Run `/commit` to commit changes
+5. (Optional, telemetry-bearing features only) Run `/validate_telemetry [<spec>]` to verify the trace narrative
+6. Run `/commit` to commit changes
 
 ## MCP Configuration
 
@@ -97,7 +100,7 @@ Ticket → /create_plan → /implement_plan → /validate_plan → /commit
 | Gemini CLI | TBD | TBD |
 | Pi | N/A | N/A |
 
-Available MCP servers: `kubernetes` (disabled by default)
+Available MCP servers: `kubernetes` (disabled by default), `aspire-dashboard` (disabled by default; see [microsoft/aspire#14733](https://github.com/microsoft/aspire/issues/14733) for the standalone-Docker MCP caveat)
 
 ## Tool-Specific Notes
 
