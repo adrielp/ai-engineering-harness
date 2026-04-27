@@ -56,6 +56,13 @@ Tip: You can also invoke this command with a ticket file directly: `/create_plan
 3. **Spawn parallel sub-tasks** for comprehensive research
 4. **Present findings and design options**
 
+### Stress-testing the plan
+
+When the user's requirements are vague or you need to walk down decision branches with the user, delegate to the `interview` skill to drive a focused, relentless interview. Useful when:
+- Requirements have hidden ambiguity
+- Multiple architectural choices need to be resolved
+- The user explicitly asks to "stress-test" or "drill into" the plan
+
 ### Step 3: Plan Structure Development
 
 Present a high-level structure for approval before detailed writing.

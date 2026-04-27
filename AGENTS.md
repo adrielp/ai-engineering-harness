@@ -17,21 +17,21 @@ ai-engineering-harness/
 ├── opencode/           → ~/.config/opencode/
 │   ├── agents/         # 6 agents (snake_case)
 │   ├── commands/       # 8 slash commands
-│   ├── skills/         # 4 auto-triggered skills
+│   ├── skills/         # 14 skills (auto-triggered)
 │   └── opencode.json   # MCP configuration
 ├── claude/             → ~/.claude/
 │   ├── agents/         # 6 agents (snake_case)
-│   ├── skills/         # 11 skills (8 manual + 3 auto)
+│   ├── skills/         # 24 skills (8 manual + 16 auto)
 │   ├── .mcp.json       # MCP configuration
 │   └── settings.json   # Settings schema
 ├── gemini/             → ~/.gemini/
 │   ├── agents/         # 6 agents (snake_case)
 │   ├── commands/       # 11 commands (TOML format)
-│   └── skills/         # 11 skills (8 manual + 3 auto)
+│   └── skills/         # 22 skills (8 manual + 14 auto)
 ├── pi/                 → ~/.pi/agent/
 │   ├── agents/         # 6 agents (kebab-case)
 │   ├── prompts/        # 10 prompt templates (Pi's commands)
-│   ├── skills/         # 15 skills (auto-triggered)
+│   ├── skills/         # 20 skills (auto-triggered)
 │   └── extensions/     # subagent extension (multi-agent workflows)
 └── thoughts/           # Context engineering artifacts
     ├── shared/tickets/ # Work items
@@ -55,6 +55,11 @@ ai-engineering-harness/
 | `git_commit_helper` | ✓ | ✓ | ✓ | ✓ | Auto | Triggers on "commit" keywords |
 | `pr_description_generator` | ✓ | ✓ | ✓ | ✓ | Auto | Triggers when creating PRs |
 | `experimental_pr_workflow` | ✓ | ✓ | ✓ | ✓ | Auto | Formalizes experimental work |
+| `interview` | ✓ | ✓ | ✓ | ✓ | Auto | Stress-test plans via relentless user interview |
+| `improve_codebase_architecture` | ✓ | ✓ | ✓ | ✓ | Auto | Find architectural friction, propose deep-module refactors |
+| `prd_to_issues` | ✓ | ✓ | ✓ | ✓ | Auto | Break a PRD into vertical-slice issue files |
+| `tdd` | ✓ | ✓ | ✓ | ✓ | Auto | Red-green-refactor TDD discipline |
+| `write_a_prd` | ✓ | ✓ | ✓ | ✓ | Auto | Generate a PRD from a client brief |
 
 **Naming**: OpenCode, Claude, and Gemini use snake_case. Pi uses kebab-case (its native convention).
 

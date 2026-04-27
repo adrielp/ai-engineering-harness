@@ -105,6 +105,42 @@
           "files": [
             { "src": "claude/skills/todoist-task-manager/SKILL.md", "dest": "skills/todoist-task-manager/SKILL.md" }
           ]
+        },
+        "skill/interview": {
+          "description": "Stress-test plans via relentless user interview skill",
+          "files": [
+            { "src": "claude/skills/interview/SKILL.md", "dest": "skills/interview/SKILL.md" }
+          ]
+        },
+        "skill/tdd": {
+          "description": "Test-driven development with red-green-refactor loop skill",
+          "files": [
+            { "src": "claude/skills/tdd/SKILL.md",              "dest": "skills/tdd/SKILL.md"              },
+            { "src": "claude/skills/tdd/tests.md",              "dest": "skills/tdd/tests.md"              },
+            { "src": "claude/skills/tdd/mocking.md",            "dest": "skills/tdd/mocking.md"            },
+            { "src": "claude/skills/tdd/deep-modules.md",       "dest": "skills/tdd/deep-modules.md"       },
+            { "src": "claude/skills/tdd/interface-design.md",   "dest": "skills/tdd/interface-design.md"   },
+            { "src": "claude/skills/tdd/refactoring.md",        "dest": "skills/tdd/refactoring.md"        }
+          ]
+        },
+        "skill/improve-codebase-architecture": {
+          "description": "Find architectural friction and propose deep-module refactors skill",
+          "files": [
+            { "src": "claude/skills/improve-codebase-architecture/SKILL.md",     "dest": "skills/improve-codebase-architecture/SKILL.md"     },
+            { "src": "claude/skills/improve-codebase-architecture/REFERENCE.md", "dest": "skills/improve-codebase-architecture/REFERENCE.md" }
+          ]
+        },
+        "skill/prd-to-issues": {
+          "description": "Break a PRD into vertical-slice issue files skill",
+          "files": [
+            { "src": "claude/skills/prd-to-issues/SKILL.md", "dest": "skills/prd-to-issues/SKILL.md" }
+          ]
+        },
+        "skill/write-a-prd": {
+          "description": "Generate a PRD from a client brief skill",
+          "files": [
+            { "src": "claude/skills/write-a-prd/SKILL.md", "dest": "skills/write-a-prd/SKILL.md" }
+          ]
         }
       }
     },
@@ -204,6 +240,42 @@
           "description": "Git worktree manager command",
           "files": [
             { "src": "opencode/commands/worktree.md", "dest": "commands/worktree.md" }
+          ]
+        },
+        "skill/interview": {
+          "description": "Stress-test plans via relentless user interview skill",
+          "files": [
+            { "src": "opencode/skills/interview/SKILL.md", "dest": "skills/interview/SKILL.md" }
+          ]
+        },
+        "skill/tdd": {
+          "description": "Test-driven development with red-green-refactor loop skill",
+          "files": [
+            { "src": "opencode/skills/tdd/SKILL.md",              "dest": "skills/tdd/SKILL.md"              },
+            { "src": "opencode/skills/tdd/tests.md",              "dest": "skills/tdd/tests.md"              },
+            { "src": "opencode/skills/tdd/mocking.md",            "dest": "skills/tdd/mocking.md"            },
+            { "src": "opencode/skills/tdd/deep-modules.md",       "dest": "skills/tdd/deep-modules.md"       },
+            { "src": "opencode/skills/tdd/interface-design.md",   "dest": "skills/tdd/interface-design.md"   },
+            { "src": "opencode/skills/tdd/refactoring.md",        "dest": "skills/tdd/refactoring.md"        }
+          ]
+        },
+        "skill/improve-codebase-architecture": {
+          "description": "Find architectural friction and propose deep-module refactors skill",
+          "files": [
+            { "src": "opencode/skills/improve-codebase-architecture/SKILL.md",     "dest": "skills/improve-codebase-architecture/SKILL.md"     },
+            { "src": "opencode/skills/improve-codebase-architecture/REFERENCE.md", "dest": "skills/improve-codebase-architecture/REFERENCE.md" }
+          ]
+        },
+        "skill/prd-to-issues": {
+          "description": "Break a PRD into vertical-slice issue files skill",
+          "files": [
+            { "src": "opencode/skills/prd-to-issues/SKILL.md", "dest": "skills/prd-to-issues/SKILL.md" }
+          ]
+        },
+        "skill/write-a-prd": {
+          "description": "Generate a PRD from a client brief skill",
+          "files": [
+            { "src": "opencode/skills/write-a-prd/SKILL.md", "dest": "skills/write-a-prd/SKILL.md" }
           ]
         }
       }
@@ -365,6 +437,42 @@
           "files": [
             { "src": "gemini/skills/worktree/SKILL.md", "dest": "skills/worktree/SKILL.md" }
           ]
+        },
+        "skill/interview": {
+          "description": "Stress-test plans via relentless user interview skill",
+          "files": [
+            { "src": "gemini/skills/interview/SKILL.md", "dest": "skills/interview/SKILL.md" }
+          ]
+        },
+        "skill/tdd": {
+          "description": "Test-driven development with red-green-refactor loop skill",
+          "files": [
+            { "src": "gemini/skills/tdd/SKILL.md",              "dest": "skills/tdd/SKILL.md"              },
+            { "src": "gemini/skills/tdd/tests.md",              "dest": "skills/tdd/tests.md"              },
+            { "src": "gemini/skills/tdd/mocking.md",            "dest": "skills/tdd/mocking.md"            },
+            { "src": "gemini/skills/tdd/deep-modules.md",       "dest": "skills/tdd/deep-modules.md"       },
+            { "src": "gemini/skills/tdd/interface-design.md",   "dest": "skills/tdd/interface-design.md"   },
+            { "src": "gemini/skills/tdd/refactoring.md",        "dest": "skills/tdd/refactoring.md"        }
+          ]
+        },
+        "skill/improve_codebase_architecture": {
+          "description": "Find architectural friction and propose deep-module refactors skill",
+          "files": [
+            { "src": "gemini/skills/improve_codebase_architecture/SKILL.md",     "dest": "skills/improve_codebase_architecture/SKILL.md"     },
+            { "src": "gemini/skills/improve_codebase_architecture/REFERENCE.md", "dest": "skills/improve_codebase_architecture/REFERENCE.md" }
+          ]
+        },
+        "skill/prd_to_issues": {
+          "description": "Break a PRD into vertical-slice issue files skill",
+          "files": [
+            { "src": "gemini/skills/prd_to_issues/SKILL.md", "dest": "skills/prd_to_issues/SKILL.md" }
+          ]
+        },
+        "skill/write_a_prd": {
+          "description": "Generate a PRD from a client brief skill",
+          "files": [
+            { "src": "gemini/skills/write_a_prd/SKILL.md", "dest": "skills/write_a_prd/SKILL.md" }
+          ]
         }
       }
     },
@@ -386,6 +494,12 @@
           "description": "Open files from cwd in $VISUAL/$EDITOR via /edit or ctrl+e",
           "files": [
             { "src": "pi/extensions/open-editor.ts", "dest": "extensions/open-editor.ts" }
+          ]
+        },
+        "extension/bifrost": {
+          "description": "Support custom models through the bifrost proxy",
+          "files": [
+            { "src": "pi/extensions/bifrost.ts", "dest": "extensions/bifrost.ts" }
           ]
         },
         "extension/subagent": {
@@ -550,6 +664,42 @@
           "description": "Web research skill",
           "files": [
             { "src": "pi/skills/web-search-researcher/SKILL.md", "dest": "skills/web-search-researcher/SKILL.md" }
+          ]
+        },
+        "skill/interview": {
+          "description": "Stress-test plans via relentless user interview skill",
+          "files": [
+            { "src": "pi/skills/interview/SKILL.md", "dest": "skills/interview/SKILL.md" }
+          ]
+        },
+        "skill/tdd": {
+          "description": "Test-driven development with red-green-refactor loop skill",
+          "files": [
+            { "src": "pi/skills/tdd/SKILL.md",              "dest": "skills/tdd/SKILL.md"              },
+            { "src": "pi/skills/tdd/tests.md",              "dest": "skills/tdd/tests.md"              },
+            { "src": "pi/skills/tdd/mocking.md",            "dest": "skills/tdd/mocking.md"            },
+            { "src": "pi/skills/tdd/deep-modules.md",       "dest": "skills/tdd/deep-modules.md"       },
+            { "src": "pi/skills/tdd/interface-design.md",   "dest": "skills/tdd/interface-design.md"   },
+            { "src": "pi/skills/tdd/refactoring.md",        "dest": "skills/tdd/refactoring.md"        }
+          ]
+        },
+        "skill/improve-codebase-architecture": {
+          "description": "Find architectural friction and propose deep-module refactors skill",
+          "files": [
+            { "src": "pi/skills/improve-codebase-architecture/SKILL.md",     "dest": "skills/improve-codebase-architecture/SKILL.md"     },
+            { "src": "pi/skills/improve-codebase-architecture/REFERENCE.md", "dest": "skills/improve-codebase-architecture/REFERENCE.md" }
+          ]
+        },
+        "skill/prd-to-issues": {
+          "description": "Break a PRD into vertical-slice issue files skill",
+          "files": [
+            { "src": "pi/skills/prd-to-issues/SKILL.md", "dest": "skills/prd-to-issues/SKILL.md" }
+          ]
+        },
+        "skill/write-a-prd": {
+          "description": "Generate a PRD from a client brief skill",
+          "files": [
+            { "src": "pi/skills/write-a-prd/SKILL.md", "dest": "skills/write-a-prd/SKILL.md" }
           ]
         }
       }

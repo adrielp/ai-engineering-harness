@@ -136,6 +136,11 @@ All commands work identically across tools. OpenCode uses `commands/` + `skills/
 | `git-commit-helper` | auto | Triggers on "commit these changes" |
 | `pr-description-generator` | auto | Triggers when creating PRs |
 | `experimental-pr-workflow` | auto | Formalizes experimental work into tickets/PRs |
+| `interview` | auto | Stress-test plans via relentless user interview |
+| `improve-codebase-architecture` | auto | Find architectural friction, propose deep-module refactors |
+| `prd-to-issues` | auto | Break a PRD into vertical-slice issue files |
+| `tdd` | auto | Red-green-refactor TDD discipline |
+| `write-a-prd` | auto | Generate a PRD from a client brief |
 
 ### OpenTelemetry Skills (All Tools)
 
