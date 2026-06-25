@@ -22,8 +22,8 @@
 import { spawn, spawnSync } from "node:child_process";
 import { readdirSync, statSync } from "node:fs";
 import { basename, join, resolve } from "node:path";
-import type { ExtensionAPI, ExtensionContext } from "@mariozechner/pi-coding-agent";
-import type { AutocompleteItem } from "@mariozechner/pi-tui";
+import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
+import type { AutocompleteItem } from "@earendil-works/pi-tui";
 
 // Editors that open in their own window / don't occupy the terminal.
 // We launch these detached so pi keeps running.

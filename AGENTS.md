@@ -67,7 +67,7 @@ ai-engineering-harness/
 
 ## Agents
 
-All agents are shared across all four tools:
+All agents are shared across all four tools, except where noted:
 
 | Agent | OpenCode | Claude | Gemini | Pi | Purpose |
 |-------|:--------:|:------:|:------:|:--:|--------|
@@ -77,6 +77,7 @@ All agents are shared across all four tools:
 | `thoughts_analyzer` | ✓ | ✓ | ✓ | ✓ | Extract insights from research documents |
 | `thoughts_locator` | ✓ | ✓ | ✓ | ✓ | Discover documents in thoughts/ directory |
 | `web_search_researcher` | ✓ | ✓ | ✓ | ✓ | Research information from web sources |
+| `workflow_orchestrator` | ✓ | — | — | — | **Primary** agent that drives ticket → research → plan → implement → validate → commit, delegating each phase to subagents/skills and handing off through `thoughts/` artifacts to keep context clean. Pending port to other tools. |
 
 ## Workflow
 
