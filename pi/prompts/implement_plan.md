@@ -23,11 +23,7 @@ If no plan path provided, ask for one.
 
 ## Implementation Philosophy
 
-Plans are carefully designed, but reality can be messy. Your job is to:
-- Follow the plan's intent while adapting to what you find
-- Implement each phase fully before moving to the next
-- Verify your work makes sense in the broader codebase context
-- Update checkboxes in the plan as you complete sections
+Follow the plan's intent while adapting to reality: implement each phase fully before the next, verify your work fits the broader codebase, update checkboxes as you go, and don't get stuck on minor details.
 
 If you encounter a mismatch:
 - STOP and present the issue clearly:
@@ -75,11 +71,3 @@ If the plan has existing checkmarks:
 - Trust that completed work is done correctly
 - Pick up from the first unchecked item
 - Verify previous work only if something seems off
-
-## Key Principles
-
-1. **Deep Understanding Before Action** - Read files completely
-2. **Follow Intent, Not Just Instructions** - Adapt to reality
-3. **Maintain Quality** - Run verification commands
-4. **Communicate Clearly** - Update checkboxes and todos
-5. **Keep Momentum** - Don't get stuck on minor details

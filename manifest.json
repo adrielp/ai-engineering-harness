@@ -171,12 +171,13 @@
         "agents": {
           "description": "Specialized subagents for OpenCode",
           "files": [
-            { "src": "opencode/agents/codebase_analyzer.md",      "dest": "agents/codebase_analyzer.md"      },
-            { "src": "opencode/agents/codebase_locator.md",       "dest": "agents/codebase_locator.md"       },
-            { "src": "opencode/agents/codebase_pattern_finder.md","dest": "agents/codebase_pattern_finder.md" },
-            { "src": "opencode/agents/thoughts_analyzer.md",      "dest": "agents/thoughts_analyzer.md"      },
-            { "src": "opencode/agents/thoughts_locator.md",       "dest": "agents/thoughts_locator.md"       },
-            { "src": "opencode/agents/web_search_researcher.md",  "dest": "agents/web_search_researcher.md"  }
+            { "src": "opencode/agents/codebase_analyzer.md",       "dest": "agents/codebase_analyzer.md"       },
+            { "src": "opencode/agents/codebase_locator.md",        "dest": "agents/codebase_locator.md"        },
+            { "src": "opencode/agents/codebase_pattern_finder.md", "dest": "agents/codebase_pattern_finder.md" },
+            { "src": "opencode/agents/thoughts_analyzer.md",       "dest": "agents/thoughts_analyzer.md"       },
+            { "src": "opencode/agents/thoughts_locator.md",        "dest": "agents/thoughts_locator.md"        },
+            { "src": "opencode/agents/web_search_researcher.md",   "dest": "agents/web_search_researcher.md"   },
+            { "src": "opencode/agents/workflow_orchestrator.md",   "dest": "agents/workflow_orchestrator.md"   }
           ]
         },
         "command/commit": {
@@ -561,10 +562,10 @@
             { "src": "pi/extensions/subagent/prompts/scout-and-plan.md",   "dest": "extensions/subagent/prompts/scout-and-plan.md"   }
           ]
         },
-        "prompt/commit": {
-          "description": "Git commit workflow prompt",
+        "extension/claude-provider": {
+          "description": "Pi clone of OpenCode Auth Plugin for Claude Code Max Support",
           "files": [
-            { "src": "pi/prompts/commit.md", "dest": "prompts/commit.md" }
+            { "src": "pi/extensions/claude-provider/index.ts", "dest": "extensions/claude-provider/index.ts"}
           ]
         },
         "prompt/create_plan": {
@@ -636,24 +637,6 @@
             { "src": "pi/prompts/worktree.md", "dest": "prompts/worktree.md" }
           ]
         },
-        "skill/codebase-analyzer": {
-          "description": "Codebase implementation analysis skill",
-          "files": [
-            { "src": "pi/skills/codebase-analyzer/SKILL.md", "dest": "skills/codebase-analyzer/SKILL.md" }
-          ]
-        },
-        "skill/codebase-locator": {
-          "description": "File and component locator skill",
-          "files": [
-            { "src": "pi/skills/codebase-locator/SKILL.md", "dest": "skills/codebase-locator/SKILL.md" }
-          ]
-        },
-        "skill/codebase-pattern-finder": {
-          "description": "Pattern and implementation discovery skill",
-          "files": [
-            { "src": "pi/skills/codebase-pattern-finder/SKILL.md", "dest": "skills/codebase-pattern-finder/SKILL.md" }
-          ]
-        },
         "skill/experimental-pr-workflow": {
           "description": "Experimental PR workflow skill",
           "files": [
@@ -669,13 +652,20 @@
         "skill/init-harness": {
           "description": "Initialize harness skill",
           "files": [
-            { "src": "pi/skills/init-harness/SKILL.md", "dest": "skills/init-harness/SKILL.md" }
+            { "src": "pi/skills/init-harness/SKILL.md", "dest": "skills/init-harness/SKILL.md" },
+            { "src": "pi/skills/init-harness/references/ticket-template.md", "dest": "skills/init-harness/references/ticket-template.md" }
           ]
         },
         "skill/otel-collector": {
           "description": "OpenTelemetry Collector configuration skill",
           "files": [
-            { "src": "pi/skills/otel-collector/SKILL.md", "dest": "skills/otel-collector/SKILL.md" }
+            { "src": "pi/skills/otel-collector/SKILL.md", "dest": "skills/otel-collector/SKILL.md" },
+            { "src": "pi/skills/otel-collector/references/receivers.md", "dest": "skills/otel-collector/references/receivers.md" },
+            { "src": "pi/skills/otel-collector/references/processors.md", "dest": "skills/otel-collector/references/processors.md" },
+            { "src": "pi/skills/otel-collector/references/exporters.md", "dest": "skills/otel-collector/references/exporters.md" },
+            { "src": "pi/skills/otel-collector/references/pipelines.md", "dest": "skills/otel-collector/references/pipelines.md" },
+            { "src": "pi/skills/otel-collector/references/sampling.md", "dest": "skills/otel-collector/references/sampling.md" },
+            { "src": "pi/skills/otel-collector/references/deployment.md", "dest": "skills/otel-collector/references/deployment.md" }
           ]
         },
         "skill/otel-instrument": {
@@ -687,43 +677,36 @@
         "skill/otel-instrumentation": {
           "description": "OpenTelemetry SDK instrumentation skill",
           "files": [
-            { "src": "pi/skills/otel-instrumentation/SKILL.md", "dest": "skills/otel-instrumentation/SKILL.md" }
+            { "src": "pi/skills/otel-instrumentation/SKILL.md", "dest": "skills/otel-instrumentation/SKILL.md" },
+            { "src": "pi/skills/otel-instrumentation/references/nodejs.md", "dest": "skills/otel-instrumentation/references/nodejs.md" },
+            { "src": "pi/skills/otel-instrumentation/references/go.md", "dest": "skills/otel-instrumentation/references/go.md" },
+            { "src": "pi/skills/otel-instrumentation/references/python.md", "dest": "skills/otel-instrumentation/references/python.md" },
+            { "src": "pi/skills/otel-instrumentation/references/java.md", "dest": "skills/otel-instrumentation/references/java.md" },
+            { "src": "pi/skills/otel-instrumentation/references/dotnet.md", "dest": "skills/otel-instrumentation/references/dotnet.md" },
+            { "src": "pi/skills/otel-instrumentation/references/ruby.md", "dest": "skills/otel-instrumentation/references/ruby.md" }
           ]
         },
         "skill/otel-ottl": {
           "description": "OpenTelemetry OTTL expressions skill",
           "files": [
-            { "src": "pi/skills/otel-ottl/SKILL.md", "dest": "skills/otel-ottl/SKILL.md" }
+            { "src": "pi/skills/otel-ottl/SKILL.md", "dest": "skills/otel-ottl/SKILL.md" },
+            { "src": "pi/skills/otel-ottl/references/functions.md", "dest": "skills/otel-ottl/references/functions.md" },
+            { "src": "pi/skills/otel-ottl/references/patterns.md", "dest": "skills/otel-ottl/references/patterns.md" }
           ]
         },
         "skill/otel-semantic-conventions": {
           "description": "OpenTelemetry semantic conventions skill",
           "files": [
-            { "src": "pi/skills/otel-semantic-conventions/SKILL.md", "dest": "skills/otel-semantic-conventions/SKILL.md" }
+            { "src": "pi/skills/otel-semantic-conventions/SKILL.md", "dest": "skills/otel-semantic-conventions/SKILL.md" },
+            { "src": "pi/skills/otel-semantic-conventions/references/attributes.md", "dest": "skills/otel-semantic-conventions/references/attributes.md" },
+            { "src": "pi/skills/otel-semantic-conventions/references/migration.md", "dest": "skills/otel-semantic-conventions/references/migration.md" },
+            { "src": "pi/skills/otel-semantic-conventions/references/namespaces.md", "dest": "skills/otel-semantic-conventions/references/namespaces.md" }
           ]
         },
         "skill/pr-description-generator": {
           "description": "Automated PR description generator skill",
           "files": [
             { "src": "pi/skills/pr-description-generator/SKILL.md", "dest": "skills/pr-description-generator/SKILL.md" }
-          ]
-        },
-        "skill/thoughts-analyzer": {
-          "description": "Research document analysis skill",
-          "files": [
-            { "src": "pi/skills/thoughts-analyzer/SKILL.md", "dest": "skills/thoughts-analyzer/SKILL.md" }
-          ]
-        },
-        "skill/thoughts-locator": {
-          "description": "Thoughts directory document discovery skill",
-          "files": [
-            { "src": "pi/skills/thoughts-locator/SKILL.md", "dest": "skills/thoughts-locator/SKILL.md" }
-          ]
-        },
-        "skill/web-search-researcher": {
-          "description": "Web research skill",
-          "files": [
-            { "src": "pi/skills/web-search-researcher/SKILL.md", "dest": "skills/web-search-researcher/SKILL.md" }
           ]
         },
         "skill/interview": {

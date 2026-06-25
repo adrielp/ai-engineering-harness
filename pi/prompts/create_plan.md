@@ -25,17 +25,7 @@ When this command is invoked:
    - If a file path or ticket reference was provided, read it immediately
    - Begin the research process
 
-2. **If no parameters provided**, respond with:
-```
-I'll help you create a detailed implementation plan. Let me start by understanding what we're building.
-
-Please provide:
-1. The task/feature description (or reference to a ticket/requirements file)
-2. Any relevant context, constraints, or specific requirements
-3. Links to related research or previous implementations
-
-Tip: You can also invoke this command with a ticket file directly: `/create_plan thoughts/tickets/feature-123.md`
-```
+2. **If no parameters provided**, ask the user for: the task/feature description (or a ticket/requirements file path), any relevant context or constraints, and links to related research.
 
 ## Process Steps
 
@@ -127,13 +117,4 @@ Write the plan to `thoughts/plans/{descriptive_name}.md` using this template:
 
 ### Step 5: Review and Iterate
 
-Continue refining until the user is satisfied.
-
-## Important Guidelines
-
-1. **Be Skeptical** - Question vague requirements
-2. **Be Interactive** - Get user buy-in at each step
-3. **Be Thorough** - Read all context files COMPLETELY
-4. **Be Practical** - Focus on incremental, testable changes
-5. **Track Progress** - Use TodoWrite
-6. **No Open Questions in Final Plan** - All decisions must be made before finalizing
+Continue refining until the user is satisfied. All decisions must be made before finalizing — no open questions in the final plan.

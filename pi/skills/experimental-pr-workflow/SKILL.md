@@ -1,6 +1,6 @@
 ---
 name: experimental-pr-workflow
-description: Handles experimental features that lack proper ticketing by retroactively creating Linear tickets and PRs from commits. Use when user has made commits without tickets, mentions "founder mode", or asks to formalize experimental work.
+description: Retroactively create Linear tickets and PRs from untracked commits. Use for commits without tickets, "founder mode", or formalizing experimental work.
 allowed-tools: Read, Bash, Grep, Glob, Write
 ---
 

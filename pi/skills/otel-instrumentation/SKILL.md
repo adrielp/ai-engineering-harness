@@ -1,10 +1,6 @@
 ---
 name: otel-instrumentation
-description: >
-  Application-side OpenTelemetry SDK setup — traces, metrics, structured
-  logging across Node.js, Go, Python, Java, .NET, Ruby. Prescriptive
-  guidance for resource attributes, span design, metric instrument selection,
-  sensitive data handling, and validation.
+description: "Application-side OpenTelemetry SDK setup — traces, metrics, structured logging across Node.js, Go, Python, Java, .NET, Ruby. Use for instrumenting app code with the OTel SDK."
 disable-model-invocation: true
 allowed-tools: Read, Bash, Grep, Glob, Edit, Write
 ---
@@ -129,17 +125,7 @@ Set attributes at SDK level — do NOT rely solely on the Collector's `k8sattrib
 
 ### Exception Recording
 
-Record exceptions in **logs with trace context**, not span events. The Span Event API is being phased out.
-
-```javascript
-// BAD: span.recordException(error);
-// GOOD: Log with trace context
-logger.error('Payment failed', {
-  error: error.message,
-  'error.stack': error.stack,
-  'order.id': orderId,
-});
-```
+Record exceptions in **logs with trace context** (a structured `logger.error` carrying `error.message`, `error.stack`, and relevant business IDs), not `span.recordException`. The Span Event API is being phased out.
 
 ### Span Hygiene
 
@@ -204,8 +190,10 @@ One `Histogram` with these attributes covers Rate, Errors, and Duration:
 
 ### Trace Correlation
 
+Hook the logger to pull `trace_id`/`span_id` from the active span on every line. Same pattern in every language: read the current span, if its context is valid, emit `trace_id` (32 hex) and `span_id` (16 hex).
+
 ```javascript
-// Node.js (pino)
+// Node.js (pino) — same idea via slog (Go) / structlog (Python) processors
 const logger = pino({
   mixin() {
     const span = trace.getActiveSpan();
@@ -214,31 +202,6 @@ const logger = pino({
     return { trace_id: ctx.traceId, span_id: ctx.spanId, trace_flags: ctx.traceFlags };
   },
 });
-```
-
-```go
-// Go (slog)
-func LogWithTrace(ctx context.Context, logger *slog.Logger, msg string, attrs ...slog.Attr) {
-    span := trace.SpanFromContext(ctx)
-    if span.SpanContext().IsValid() {
-        attrs = append(attrs,
-            slog.String("trace_id", span.SpanContext().TraceID().String()),
-            slog.String("span_id", span.SpanContext().SpanID().String()),
-        )
-    }
-    logger.LogAttrs(ctx, slog.LevelInfo, msg, attrs...)
-}
-```
-
-```python
-# Python (structlog)
-def add_trace_context(logger, method_name, event_dict):
-    span = trace.get_current_span()
-    if span.get_span_context().is_valid:
-        ctx = span.get_span_context()
-        event_dict["trace_id"] = format(ctx.trace_id, "032x")
-        event_dict["span_id"] = format(ctx.span_id, "016x")
-    return event_dict
 ```
 
 ### Severity Levels
@@ -253,15 +216,7 @@ def add_trace_context(logger, method_name, event_dict):
 
 ### Stack Traces
 
-Always single-line JSON — never multi-line:
-
-```javascript
-logger.error('Operation failed', {
-  'exception.type': error.constructor.name,
-  'exception.message': error.message,
-  'exception.stacktrace': error.stack.replace(/\n/g, '\\n'),
-});
-```
+Always single-line JSON — never multi-line. Emit `exception.type`, `exception.message`, and `exception.stacktrace` (with newlines escaped to `\\n`) as structured fields.
 
 ---
 
@@ -285,250 +240,17 @@ logger.error('Operation failed', {
 
 ### SpanProcessor Redaction (Safety Net)
 
-```javascript
-class RedactingSpanProcessor {
-  onEnd(span) {
-    const sensitive = ['password', 'token', 'secret', 'authorization', 'cookie', 'credit_card'];
-    for (const [key, value] of Object.entries(span.attributes)) {
-      if (sensitive.some(k => key.toLowerCase().includes(k))) {
-        span.attributes[key] = '[REDACTED]';
-      }
-    }
-  }
-  onStart() {}
-  shutdown() { return Promise.resolve(); }
-  forceFlush() { return Promise.resolve(); }
-}
-```
-
-For Collector-side redaction as defence-in-depth, see `otel_ottl`.
+Add a custom SpanProcessor whose `onEnd` scans every attribute key for a denylist (`password`, `token`, `secret`, `authorization`, `cookie`, `credit_card`) and overwrites matching values with `[REDACTED]`. This is a last-resort net — sanitize at the source first. For Collector-side redaction as defence-in-depth, see `otel_ottl`.
 
 ---
 
 ## 6. Language Setup Guides
 
-### Node.js
+Detect the language (§ Entrypoint table), then load the matching guide for install commands, SDK bootstrap, and custom-span snippets:
 
-```bash
-npm install @opentelemetry/sdk-node @opentelemetry/auto-instrumentations-node \
-  @opentelemetry/exporter-trace-otlp-grpc @opentelemetry/exporter-metrics-otlp-grpc \
-  @opentelemetry/exporter-logs-otlp-grpc @opentelemetry/resources @opentelemetry/semantic-conventions
-```
+[Node.js](references/nodejs.md) · [Go](references/go.md) · [Python](references/python.md) · [Java](references/java.md) · [.NET](references/dotnet.md) · [Ruby](references/ruby.md)
 
-```typescript
-// instrumentation.ts — load BEFORE application code via --require or --import
-import { NodeSDK } from '@opentelemetry/sdk-node';
-import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
-import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-grpc';
-import { OTLPMetricExporter } from '@opentelemetry/exporter-metrics-otlp-grpc';
-import { OTLPLogExporter } from '@opentelemetry/exporter-logs-otlp-grpc';
-import { PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics';
-import { BatchLogRecordProcessor } from '@opentelemetry/sdk-logs';
-import { Resource } from '@opentelemetry/resources';
-import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from '@opentelemetry/semantic-conventions';
-import { randomUUID } from 'crypto';
-
-const sdk = new NodeSDK({
-  resource: new Resource({
-    [ATTR_SERVICE_NAME]: process.env.OTEL_SERVICE_NAME || 'my-service',
-    [ATTR_SERVICE_VERSION]: process.env.SERVICE_VERSION || 'unknown',
-    'service.instance.id': randomUUID(),
-    'deployment.environment.name': process.env.NODE_ENV || 'development',
-  }),
-  traceExporter: new OTLPTraceExporter(),
-  metricReader: new PeriodicExportingMetricReader({
-    exporter: new OTLPMetricExporter(),
-    exportIntervalMillis: 60_000,
-  }),
-  logRecordProcessor: new BatchLogRecordProcessor(new OTLPLogExporter()),
-  instrumentations: [getNodeAutoInstrumentations()],
-});
-
-sdk.start();
-process.on('SIGTERM', () => sdk.shutdown().then(() => process.exit(0)).catch(() => process.exit(1)));
-```
-
-```bash
-node --require ./instrumentation.ts src/index.ts
-# ESM: node --import ./instrumentation.ts src/index.ts
-```
-
-**Custom spans:**
-```typescript
-import { trace, SpanStatusCode } from '@opentelemetry/api';
-const tracer = trace.getTracer('my-service');
-
-async function processOrder(orderId: string) {
-  return tracer.startActiveSpan('process order', async (span) => {
-    try {
-      span.setAttribute('order.id', orderId);
-      return await doWork();
-    } catch (error) {
-      span.setStatus({ code: SpanStatusCode.ERROR, message: error.message });
-      throw error;
-    } finally {
-      span.end();
-    }
-  });
-}
-```
-
-**Custom metrics:**
-```typescript
-import { metrics } from '@opentelemetry/api';
-const meter = metrics.getMeter('my-service');
-
-const requestDuration = meter.createHistogram('http.server.request.duration', {
-  description: 'Duration of HTTP server requests',
-  unit: 's',
-});
-```
-
-### Go
-
-```bash
-go get go.opentelemetry.io/otel go.opentelemetry.io/otel/sdk go.opentelemetry.io/otel/sdk/metric \
-  go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc \
-  go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc \
-  go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp
-```
-
-```go
-func Setup(ctx context.Context) (func(context.Context) error, error) {
-    res, err := resource.New(ctx,
-        resource.WithAttributes(
-            semconv.ServiceName(os.Getenv("OTEL_SERVICE_NAME")),
-            semconv.ServiceVersion(os.Getenv("SERVICE_VERSION")),
-            semconv.DeploymentEnvironmentName(os.Getenv("ENVIRONMENT")),
-            semconv.ServiceInstanceID(uuid.New().String()),
-        ),
-    )
-    if err != nil { return nil, err }
-
-    traceExp, _ := otlptracegrpc.New(ctx)
-    tp := sdktrace.NewTracerProvider(sdktrace.WithBatcher(traceExp), sdktrace.WithResource(res))
-    otel.SetTracerProvider(tp)
-
-    metricExp, _ := otlpmetricgrpc.New(ctx)
-    mp := metric.NewMeterProvider(
-        metric.WithReader(metric.NewPeriodicReader(metricExp, metric.WithInterval(60*time.Second))),
-        metric.WithResource(res),
-    )
-    otel.SetMeterProvider(mp)
-
-    return func(ctx context.Context) error {
-        if err := tp.Shutdown(ctx); err != nil { return err }
-        return mp.Shutdown(ctx)
-    }, nil
-}
-```
-
-**Custom spans:**
-```go
-tracer := otel.Tracer("my-service")
-
-func ProcessOrder(ctx context.Context, orderID string) error {
-    ctx, span := tracer.Start(ctx, "process order")
-    defer span.End()
-    span.SetAttributes(attribute.String("order.id", orderID))
-
-    if err := doWork(ctx); err != nil {
-        span.SetStatus(codes.Error, err.Error())
-        return err
-    }
-    return nil
-}
-```
-
-### Python
-
-```bash
-pip install opentelemetry-distro opentelemetry-exporter-otlp
-opentelemetry-bootstrap -a install  # Auto-detect instrumentations
-```
-
-```python
-resource = Resource.create({
-    "service.name": os.getenv("OTEL_SERVICE_NAME", "my-service"),
-    "service.version": os.getenv("SERVICE_VERSION", "unknown"),
-    "service.instance.id": str(uuid.uuid4()),
-    "deployment.environment.name": os.getenv("ENVIRONMENT", "development"),
-})
-
-tp = TracerProvider(resource=resource)
-tp.add_span_processor(BatchSpanProcessor(OTLPSpanExporter()))
-trace.set_tracer_provider(tp)
-
-reader = PeriodicExportingMetricReader(OTLPMetricExporter(), export_interval_millis=60000)
-mp = MeterProvider(resource=resource, metric_readers=[reader])
-metrics.set_meter_provider(mp)
-```
-
-**Or zero-code:** `opentelemetry-instrument python app.py`
-
-**Custom spans:**
-```python
-tracer = trace.get_tracer("my-service")
-
-@tracer.start_as_current_span("process order")
-def process_order(order_id: str):
-    span = trace.get_current_span()
-    span.set_attribute("order.id", order_id)
-```
-
-### Java
-
-**Recommended: Java agent (zero-code):**
-```bash
-java -javaagent:opentelemetry-javaagent.jar \
-  -Dotel.service.name=my-service \
-  -Dotel.exporter.otlp.endpoint=http://otel-collector:4317 \
-  -jar my-app.jar
-```
-
-**Custom spans:**
-```java
-Tracer tracer = GlobalOpenTelemetry.getTracer("my-service");
-Span span = tracer.spanBuilder("process order").startSpan();
-try (Scope scope = span.makeCurrent()) {
-    span.setAttribute("order.id", orderId);
-    doWork();
-} catch (Exception e) {
-    span.setStatus(StatusCode.ERROR, e.getMessage());
-    throw e;
-} finally {
-    span.end();
-}
-```
-
-### .NET
-
-```bash
-dotnet add package OpenTelemetry.Extensions.Hosting OpenTelemetry.Instrumentation.AspNetCore OpenTelemetry.Exporter.OpenTelemetryProtocol
-```
-
-```csharp
-builder.Services.AddOpenTelemetry()
-    .ConfigureResource(r => r.AddService(
-        serviceName: builder.Configuration["OTEL_SERVICE_NAME"] ?? "my-service",
-        serviceVersion: typeof(Program).Assembly.GetName().Version?.ToString()))
-    .WithTracing(t => t.AddAspNetCoreInstrumentation().AddHttpClientInstrumentation().AddOtlpExporter())
-    .WithMetrics(m => m.AddAspNetCoreInstrumentation().AddHttpClientInstrumentation().AddOtlpExporter());
-```
-
-### Ruby
-
-```bash
-gem install opentelemetry-sdk opentelemetry-exporter-otlp opentelemetry-instrumentation-all
-```
-
-```ruby
-OpenTelemetry::SDK.configure do |c|
-  c.service_name = ENV.fetch('OTEL_SERVICE_NAME', 'my-service')
-  c.service_version = ENV.fetch('SERVICE_VERSION', 'unknown')
-  c.use_all
-end
-```
+Generic rules (apply regardless of language): set the five required resource attributes at SDK level (§1), use `AlwaysOn` sampler and OTLP exporters, batch spans/logs, export metrics on a 60s periodic reader, and register a graceful shutdown hook.
 
 ---
 

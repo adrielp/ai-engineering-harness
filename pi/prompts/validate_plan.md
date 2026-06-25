@@ -73,10 +73,4 @@ Recommended workflow:
 4. `/validate_plan` - Verify implementation correctness
 5. Create PR
 
-## Key Principles
-
-1. **Understand Before Validating** - Read the entire plan first
-2. **Be Objective and Critical** - Validate functionality, not just presence
-3. **Verify Comprehensively** - Run all automated checks
-4. **Communicate Clearly** - Provide specific file references
-5. **Think Long-term** - Consider maintainability
+Validate functionality, not just presence, and consider long-term maintainability.

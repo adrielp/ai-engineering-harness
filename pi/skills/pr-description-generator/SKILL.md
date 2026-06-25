@@ -1,6 +1,6 @@
 ---
 name: pr-description-generator
-description: Generates comprehensive pull request descriptions following repository templates. Use when creating or updating PR descriptions, when user mentions pull requests, or when asked to describe changes for review.
+description: Generate comprehensive PR descriptions following repository templates. Use when creating, updating, or describing a pull request for review.
 allowed-tools: Read, Bash, Grep, Glob, Edit, Write
 ---
 
